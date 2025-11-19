@@ -1,0 +1,116 @@
+/* RESET CƠ BẢN */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ----------------------Tạo layout cho website---------------------------- */
+body {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 240px 1fr;   /* Cột trái: sidebar, cột phải: header+main */
+    grid-template-rows: 70px 1fr 30px;  /* Hàng trên: header, giữa: main, dưới: footer */
+    grid-template-areas:
+        "sidebar header"
+        "sidebar main"
+        "footer footer";
+    font-family: Arial, sans-serif;
+}
+
+/* ---------------------HEADER CHỈ Ở HÀNG TRÊN BÊN PHẢI-------------------- */
+.topbar {
+    grid-area: header;
+    background: #009900;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/*------------------------------ SIDEBAR  BÊN TRÁI------------------------- */
+
+/* LOGO HCMUTE */
+.logo-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* căn giữa ngang */
+    align-items: center;      /* căn giữa dọc nếu cần */
+    margin-bottom: 20px;
+}
+
+#logo-hcmute {
+    width: 100px;   /* chỉnh tùy ý */
+    height: auto;
+    display: block;    /* QUAN TRỌNG - loại bỏ inline spacing */
+    padding: 8px;
+    background-color: white;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background: #263238;
+    color: #fff;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 12px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 10px;
+    display: block;
+    border-radius: 6px;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #37474f;
+}
+
+
+
+
+/* MAIN CONTENT PHÍA DƯỚI BÊN PHẢI */
+.main-content {
+    grid-area: main;
+    padding: 20px;
+    background: #f4f6f8;
+    overflow-y: auto;    /* nội dung dài thì cuộn */
+}
+
+/* CÁC PAGE SPA 
+.page {
+    display: none;
+}
+*/
+.page.active {
+    display: block;
+}
+
+/* FOOTER HÀNG DƯỚI BÊN PHẢI */
+.footer {
+    grid-area: footer;
+    background: #eceff1;
+    display: flex;
+    align-items: center;
+    justify-content: center;   /* căn giữa ngang */
+    text-align: center;        /* căn giữa chữ */
+    font-size: 13px;
+    padding: 5px 0;
+}
+

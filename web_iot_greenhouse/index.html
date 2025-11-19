@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+
+    <title>IoT Green House</title>
+</head>
+
+<body>
+    <!-- Phần header phía trên website-->
+    <header class="topbar">
+        <h1 id = 'title-header'>IOT GREEN HOUSE</h1>
+    </header>
+
+    <!-- Phần layout chính-->
+
+        <aside class="sidebar">
+            <div class="logo-box">
+                <img src="./image/hcmute_logo.webp" id="logo-hcmute" alt="HCMUTE Logo">
+            </div>
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#" onclick="showPage('page-home')">Home</a></li>
+                <li><a href="#" onclick="showPage('page-soil')">Soil Moisture</a></li>
+                <li><a href="#" onclick="showPage('page-temp')">Temperature</a></li>
+                <li><a href="#" onclick="showPage('page-hum')">Humidity</a></li>
+                <li><a href="#" onclick="showPage('page-light')">Light</a></li>
+
+            </ul>
+        </aside>
+
+        <main class="main-content">
+
+            <!-- Home page -->
+            <div id="page-home" class="page">
+                <div class = "card">
+                    <div class = "card-soil">
+                        <div id = 'soil'>--%</div>
+                        <div class = 'card-icon'> <img src="./image/soil_moisture_icon.jpg" alt = "Soil moisture icon"></div>
+                        <div class = 'card-largebody'> Soil Moisture </div>
+                        <div class = 'card-smallbody'>Độ ẩm trong đất</div>
+                    </div>
+
+                    <div class = "Temperature">
+                        <span id = 'temperature'>--°C</span>
+                        <div class = 'card-icon'> <img src="./image/temperature_icon.jpg" alt = "temperature icon"> </div>
+                        <span class = 'card-largebody'>Temperature</span>
+                        <span class = 'card-smallbody'>Nhiệt độ môi trường</span>
+                    </div>
+
+                    <div class = "Humidity">
+                        <span id = 'humidity'>--%</span>
+                        <div class = 'card-icon'> <img src="./image/humidity_icon.jpg" alt = "humidity icon"></div>
+                        <span class = 'card-largebody'>Humidity</span>
+                        <span class = 'card-smallbody'>Độ ẩm không khí</span>
+                    </div>
+
+                    <div class = "Light">
+                        <span id = 'light'>--lux</span>
+                        <div class = 'card-icon'> <img src="./image/light_icon.png" alt = "Light icon"></div>
+                        <span class = 'card-largebody'>Light</span>
+                        <span class = 'card-smallbody'>Cường độ ánh sáng</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 id = 'title-model'>Mô hình Green House</h2>
+                <img src="greenhouse.jpg" alt = "Green House Model" id = 'model-greenhouse'>
+            </div>
+
+            <!-- Soil Moisture page-->
+            <div id="page-soil" class="page">
+                <div class="soil-indicator">
+                    <span id="soil-dot" class="dot offline"></span>
+                    <span id="soil-text">OFF</span>
+                    <button id="Bumpbt" class="chip">Mở máy bơm nước</button>
+                </div>
+                <div class="soil-chart">
+                    <h2>Soil Moisture Chart</h2>
+                    <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
+                    <div class="time-range">
+                        <label for="rangeSelect">Khoảng thời gian:</label>
+                        <select class="rangeSelect">
+                            <option value="15m" selected>15 phút</option>
+                            <option value="1h">1 giờ</option>
+                            <option value="6h">6 giờ</option>
+                            <option value="1d">1 ngày</option>
+                        </select>
+                    </div>
+                    <canvas id="soil-chart"></canvas>
+            </div>
+
+            <!-- Temperature page-->
+            <div id="page-temp" class="page">
+                <div class="temp-indicator">
+                    <span id="temp-dot" class="dot offline"></span>
+                    <span id="temp-text">OFF</span>
+                    <button id="fanbt" class="chip">Mở quạt</button>
+                </div>
+                <div class="temp-chart">
+                    <h2>Temperature Chart</h2>
+                    <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
+                    <div class="time-range">
+                        <label for="rangeSelect">Khoảng thời gian:</label>
+                        <select class="rangeSelect">
+                            <option value="15m" selected>15 phút</option>
+                            <option value="1h">1 giờ</option>
+                            <option value="6h">6 giờ</option>
+                            <option value="1d">1 ngày</option>
+                        </select>
+                    </div>
+                    <canvas id="temp-chart"></canvas>
+            </div>
+
+            <!-- Humidity page-->
+            <div id="page-humidity" class="page">
+                <div class="humidity-indicator">
+                    <span id="humidity-dot" class="dot offline"></span>
+                    <span id="humidity-text">OFF</span>
+                </div>
+                <div class="humidity-chart">
+                    <h2>Humidity Chart</h2>
+                    <!-- Biểu đồ độ ẩm không khí sẽ được hiển thị ở đây -->
+                    <div class="time-range">
+                        <label for="rangeSelect">Khoảng thời gian:</label>
+                        <select class="rangeSelect">
+                            <option value="15m" selected>15 phút</option>
+                            <option value="1h">1 giờ</option>
+                            <option value="6h">6 giờ</option>
+                            <option value="1d">1 ngày</option>
+                        </select>
+                    </div>
+                    <canvas id="humidity-chart"></canvas>
+            </div>
+
+            <!-- Light page-->
+            <div id="page-light" class="page">
+                <div class="light-indicator">
+                    <span id="light-dot" class="dot offline"></span>
+                    <span id="light-text">OFF</span>
+                    <button id="led" class="chip">Mở Đèn</button>
+                </div>
+                <div class="Light-chart">
+                    <h2>Light Chart</h2>
+                    <!-- Biểu cường độ ánh sáng sẽ được hiển thị ở đây -->
+                    <div class="time-range">
+                        <label for="rangeSelect">Khoảng thời gian:</label>
+                        <select class="rangeSelect">
+                            <option value="15m" selected>15 phút</option>
+                            <option value="1h">1 giờ</option>
+                            <option value="6h">6 giờ</option>
+                            <option value="1d">1 ngày</option>
+                        </select>
+                    </div>
+                    <canvas id="light-chart"></canvas>
+            </div>
+        </main>
+
+    <footer class ="footer">
+        <small>© <span id="year"></span> IoT Green House - HCMUTE</small>
+    </footer>
+
+    <script src="./function.js"></script>
+
+    <!-- FireBase-->
+    <script>
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+        apiKey: "AIzaSyBW-I7nlfPWto8oUpkfO4Rx4OBfMcVHkPU",
+        authDomain: "green-house-afc5c.firebaseapp.com",
+        projectId: "green-house-afc5c",
+        storageBucket: "green-house-afc5c.firebasestorage.app",
+        messagingSenderId: "737749315088",
+        appId: "1:737749315088:web:180e5429b5b4530f27a495",
+        measurementId: "G-8VH2VYCR8Y"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+</body>
+
+</html>
