@@ -140,34 +140,60 @@ body {
 .card {
     display: grid;
     grid-template-columns: repeat(4, 1fr);   /* 4 cột */
-    gap: 15px;
+    gap: 30px;
     margin-bottom: 30px;
 }
 
-.card > div {
+
+/* ===============================================
+   CARD LAYOUT: ICON TRÁI – VALUE PHẢI
+   =============================================== */
+
+.card-item {
     background: white;
     padding: 16px;
     border-radius: 12px;
-    text-align: center;
+    width: 280px;
+    text-align: center; /* Dùng cho largebody & smallbody */
     box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Icon của card */
-.card-icon img {
-    width: auto;
-    height: 70px;
-    margin: 10px 0;
+/* Dòng trên cùng: icon trái – value phải */
+.card-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;  /* icon + value nằm cạnh nhau bên trái */
+    gap: 60px;                    /* chỉnh khoảng cách nhỏ tùy bạn */
 }
 
-.card-largebody {
-    font-size: 20px;
+/* Icon trong card */ 
+.card-icon img {
+    width: 80px;
+    height: 80px;
+    margin-left: 40px;
+    background: white;
+}
+
+/* Giá trị cảm biến */
+.card-value {
+    font-size: 28px;
     font-weight: bold;
 }
 
-.card-smallbody {
-    color: rgb(99, 98, 98);
-    font-size: 14px;
+/* Largebody căn giữa */
+.card-largebody {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 4px;
 }
+
+/* Smallbody căn giữa */
+.card-smallbody {
+    font-size: 14px;
+    color: rgb(77, 75, 75);
+}
+
 
 /* Giá trị cảm biến chính */
 #soil, #temperature, #humidity, #light {

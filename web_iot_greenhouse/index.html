@@ -35,37 +35,61 @@
         <main class="main-content">
 
             <!-- Home page -->
-            <div id="page-home" class="page">
-                <div class = "card">
-                    <div class = "card-soil">
-                        <div id = 'soil'>--%</div>
-                        <div class = 'card-icon'> <img src="./image/soil_moisture_icon.jpg" alt = "Soil moisture icon"></div>
-                        <div class = 'card-largebody'> Soil Moisture </div>
-                        <div class = 'card-smallbody'>Độ ẩm trong đất</div>
-                    </div>
+           <div id="page-home" class="page active">
 
-                    <div class = "Temperature">
-                        <span id = 'temperature'>--°C</span>
-                        <div class = 'card-icon'> <img src="./image/temperature_icon.jpg" alt = "temperature icon"> </div>
-                        <span class = 'card-largebody'>Temperature</span>
-                        <span class = 'card-smallbody'>Nhiệt độ môi trường</span>
-                    </div>
+            <div class="card">
 
-                    <div class = "Humidity">
-                        <span id = 'humidity'>--%</span>
-                        <div class = 'card-icon'> <img src="./image/humidity_icon.jpg" alt = "humidity icon"></div>
-                        <span class = 'card-largebody'>Humidity</span>
-                        <span class = 'card-smallbody'>Độ ẩm không khí</span>
+                <!-- Soil Moisture -->
+                <div class="card-item">
+                    <div class="card-row">
+                        <div class="card-icon">
+                            <img src="./image/soil_moisture_icon.jpg" alt="Soil moisture icon">
+                        </div>
+                        <div id="soil" class="card-value">--%</div>
                     </div>
-
-                    <div class = "Light">
-                        <span id = 'light'>--lux</span>
-                        <div class = 'card-icon'> <img src="./image/light_icon.png" alt = "Light icon"></div>
-                        <span class = 'card-largebody'>Light</span>
-                        <span class = 'card-smallbody'>Cường độ ánh sáng</span>
-                    </div>
+                    <div class="card-largebody">Soil Moisture</div>
+                    <div class="card-smallbody">Độ ẩm trong đất</div>
                 </div>
+
+                <!-- Temperature -->
+                <div class="card-item">
+                    <div class="card-row">
+                        <div class="card-icon">
+                            <img src="./image/temperature_icon.png" alt="Temperature icon">
+                        </div>
+                        <div id="temperature" class="card-value">--°C</div>
+                    </div>
+                    <div class="card-largebody">Temperature</div>
+                    <div class="card-smallbody">Nhiệt độ môi trường</div>
+                </div>
+
+                <!-- Humidity -->
+                <div class="card-item">
+                    <div class="card-row">
+                        <div class="card-icon">
+                            <img src="./image/humidity_icon.jpg" alt="Humidity icon">
+                        </div>
+                        <div id="humidity" class="card-value">--%</div>
+                    </div>
+                    <div class="card-largebody">Humidity</div>
+                    <div class="card-smallbody">Độ ẩm không khí</div>
+                </div>
+
+                <!-- Light -->
+                <div class="card-item">
+                    <div class="card-row">
+                        <div class="card-icon">
+                            <img src="./image/light_icon.png" alt="Light icon">
+                        </div>
+                        <div id="light" class="card-value">--lux</div>
+                    </div>
+                    <div class="card-largebody">Light</div>
+                    <div class="card-smallbody">Cường độ ánh sáng</div>
+                </div>
+
             </div>
+
+
 
             <div>
                 <h2 id = 'title-model'>Mô hình Green House</h2>
