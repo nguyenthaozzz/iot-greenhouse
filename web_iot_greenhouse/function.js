@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById(pageId).classList.add("active");
     };
+
+
     // ======== SOIL PUMP =========
     const pumpBtn = document.getElementById("Bumpbt");
     if (pumpBtn) {
@@ -16,16 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (txt.textContent === "OFF") {
                 txt.textContent = "ON";
                 dot.classList.replace("offline", "online");
-                pumpBtn.textContent = "Tắt máy bơm nước";
             } else {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
-                pumpBtn.textContent = "Mở máy bơm nước";
             }
         });
     }
     // ======== FAN =========
     const fanBtn = document.getElementById("fanbt");
+    const fanVideo = document.getElementById("fan-video");
+
     if (fanBtn) {
         fanBtn.addEventListener("click", () => {
             const dot = document.getElementById("temp-dot");
@@ -34,14 +36,18 @@ document.addEventListener("DOMContentLoaded", () => {
             if (txt.textContent === "OFF") {
                 txt.textContent = "ON";
                 dot.classList.replace("offline", "online");
-                fanBtn.textContent = "Tắt quạt";
+
+                fanVideo.hidden = false;  // bật video
             } else {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
-                fanBtn.textContent = "Mở quạt";
+
+
+                fanVideo.hidden = true;   // tắt video
             }
         });
     }
+
     // ======== LIGHT =========
     const ledBtn = document.getElementById("led");
     if (ledBtn) {
@@ -52,14 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (txt.textContent === "OFF") {
                 txt.textContent = "ON";
                 dot.classList.replace("offline", "online");
-                ledBtn.textContent = "Tắt đèn";
+
             } else {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
-                ledBtn.textContent = "Mở Đèn";
+
             }
         });
     }
     // YEAR FOOTER
     document.getElementById("year").textContent = new Date().getFullYear();
 });
+
+

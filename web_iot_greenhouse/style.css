@@ -15,7 +15,7 @@
 body {
     display: grid;
     grid-template-columns: 240px 1fr;   /* Sidebar | Content */
-    grid-template-rows: 70px 1fr 50px;  /* Header | Main | Footer */
+    grid-template-rows: 70px 1fr 60px;  /* Header | Main | Footer */
     grid-template-areas:
         "sidebar header"
         "sidebar main"
@@ -232,6 +232,14 @@ body {
     align-items: center;
     gap: 10px;
 }
+.fan-video {
+    position: absolute;
+    width: 110px;    /* chỉnh cho khớp cái quạt trong ảnh */
+    top: 329px;      /* chỉnh lại theo vị trí quạt trong ảnh */
+    right: 404px;    /* chỉnh lại cho khớp */
+    border-radius: 8px;
+    pointer-events: none; /* để video không bị click */
+}
 
 /* =====================================================================
    CHUNG CHO TẤT CẢ PAGE SPA (tiêu đề)
@@ -278,13 +286,34 @@ body {
 .chip {
     background: #009900;
     color: white;
-    padding: 7px 14px;
+    padding: 10px 20px;      /* tăng padding → nút to hơn */
+    font-size: 22px;         /* chữ lớn hơn */
     border: none;
     border-radius: 20px;
-    margin-left: 10px;
+    margin-left: 20px;       /* Tăng khoảng cách với chữ ON/OFF */
     cursor: pointer;
     transition: 0.2s;
+    white-space: nowrap;     /* tránh bị xuống dòng */
+
+    min-width: 180px;   /* tất cả nút sẽ có chiều rộng tối thiểu giống nhau */
+    text-align: center; /* căn chữ giữa */
 }
+
+.soil-indicator,
+.temp-indicator,
+.light-indicator,
+.humidity-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;   /* khoảng cách cố định giữa các phần */
+    margin-bottom: 20px;
+}
+
+.ind-text {
+    width: 40px;    /* cố định chiều rộng để chữ OFF/ON không làm lệch layout */
+    display: inline-block;
+}
+
 
 .chip:hover {
     background: #007700;
@@ -379,4 +408,5 @@ canvas {
 .page.active {
     display: block;
 }
+
 
