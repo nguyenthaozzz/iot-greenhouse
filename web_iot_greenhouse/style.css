@@ -162,7 +162,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;  /* icon + value nằm cạnh nhau bên trái */
-    gap: 60px;                    /* chỉnh khoảng cách nhỏ tùy bạn */
+    gap: 40px;                    /* chỉnh khoảng cách nhỏ tùy bạn */
 }
 
 /* Icon trong card */ 
@@ -178,7 +178,6 @@ body {
     font-size: 28px;
     font-weight: bold;
 }
-
 /* Largebody căn giữa */
 .card-largebody {
     font-size: 20px;
