@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Simulator (Thiết bị ảo)</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f0f0f0; }
+        .status-box { 
+            background: white; padding: 20px; border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto;
+        }
+        h2 { text-align: center; color: #2c3e50; }
+        .log { font-family: monospace; color: #d63031; margin-top: 10px; }
+        button { 
+            display: block; width: 100%; padding: 10px; margin-top: 20px;
+            background: #0984e3; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;
+        }
+        button:hover { background: #74b9ff; }
+        button.stop { background: #d63031; }
+    </style>
+</head>
+<body>
+
+    <div class="status-box">
+        <h2>🌡️ Giả lập dữ liệu IoT</h2>
+        <p>Trạng thái: <b id="status" style="color: red;">Đang dừng</b></p>
+        <div id="values">
+            <p>Nhiệt độ: --</p>
+            <p>Độ ẩm KK: --</p>
+            <p>Độ ẩm đất: --</p>
+            <p>Ánh sáng: --</p>
+        </div>
+        <button id="toggleBtn" onclick="toggleSimulation()">Bắt đầu giả lập</button>
+        <p class="log" id="logMsg"></p>
+    </div>
+
+    <script type="module">
+        // 1. Cấu hình Firebase (Y hệt project của bạn)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBr7tBAHwXaGBL0ceLK9c1UDSdYRq_cuZs",
+            authDomain: "project-greenhouse-5970e.firebaseapp.com",
+            databaseURL: "https://project-greenhouse-5970e-default-rtdb.firebaseio.com",
+            projectId: "project-greenhouse-5970e",
+            storageBucket: "project-greenhouse-5970e.firebasestorage.app",
+            messagingSenderId: "476065711518",
+            appId: "1:476065711518:web:fb1e3df380f3b24cfac28f",
+            measurementId: "G-4YTZQB881G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Biến kiểm soát vòng lặp
+        let intervalId = null;
+        let isRunning = false;
+
+        // Hàm sinh số ngẫu nhiên trong khoảng (min, max)
+        function getRandom(min, max, isFloat = false) {
+            const num = Math.random() * (max - min) + min;
+            return isFloat ? num.toFixed(1) : Math.floor(num);
+        }
+
+        // Hàm gửi dữ liệu lên Firebase
+        window.startSim = function() {
+            const statusText = document.getElementById('status');
+            const logMsg = document.getElementById('logMsg');
+            const valuesDiv = document.getElementById('values');
+
+            statusText.innerText = "Đang chạy dữ liệu thực...";
+            statusText.style.color = "green";
+
+            // CHẠY VÒNG LẶP GỬI DATA SAU MỖI 3 GIÂY
+            intervalId = setInterval(() => {
+                // 1. Tạo dữ liệu giả ngẫu nhiên
+                const fakeTemp = getRandom(28, 35, true);   // Nhiệt độ: 28 - 35 độ
+                const fakeHum = getRandom(60, 90);          // Độ ẩm: 60 - 90 %
+                const fakeSoil = getRandom(40, 80);         // Đất: 40 - 80 %
+                const fakeLight = getRandom(100, 1000);     // Ánh sáng: 100 - 1000 lux
+
+                // 2. Gửi lên Firebase (Dùng hàm set để ghi đè giá trị cũ)
+                // Lưu ý: Đường dẫn phải khớp với web chính: Green_house/temp, hum, soil_hum, light
+                set(ref(db, 'Green_house/temp'), parseFloat(fakeTemp));
+                set(ref(db, 'Green_house/hum'), parseInt(fakeHum));
+                set(ref(db, 'Green_house/soil_hum'), parseInt(fakeSoil));
+                set(ref(db, 'Green_house/light'), parseInt(fakeLight));
+
+                // 3. Hiển thị log chơi cho vui
+                valuesDiv.innerHTML = `
+                    <p>Nhiệt độ: ${fakeTemp}°C</p>
+                    <p>Độ ẩm KK: ${fakeHum}%</p>
+                    <p>Độ ẩm đất: ${fakeSoil}%</p>
+                    <p>Ánh sáng: ${fakeLight} lux</p>
+                `;
+                logMsg.innerText = `Đã gửi lúc ${new Date().toLocaleTimeString()}`;
+
+            }, 3000); // 3000ms = 3 giây gửi 1 lần
+        }
+
+        window.stopSim = function() {
+            clearInterval(intervalId);
+            const statusText = document.getElementById('status');
+            statusText.innerText = "Đã dừng";
+            statusText.style.color = "red";
+        }
+
+        // Gắn hàm vào window để nút bấm HTML gọi được (do type="module")
+        window.toggleSimulation = function() {
+            const btn = document.getElementById('toggleBtn');
+            if (!isRunning) {
+                window.startSim();
+                btn.innerText = "Dừng giả lập";
+                btn.classList.add('stop');
+                isRunning = true;
+            } else {
+                window.stopSim();
+                btn.innerText = "Bắt đầu giả lập";
+                btn.classList.remove('stop');
+                isRunning = false;
+            }
+        }
+    </script>
+</body>
+</html>
