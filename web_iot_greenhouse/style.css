@@ -105,6 +105,7 @@ body {
     padding: 10px 20px;
     background: #f4f6f8;
     overflow-y: auto;          /* Cho phép cuộn khi nội dung dài */
+    min-height: calc(100vh - 70px - 50px);  /* header=70px, footer=50px */
 }
 
 
