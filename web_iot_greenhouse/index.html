@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
 
 
-    <title>IOT Green House</title>
+    <title>IoT Green House</title>
 </head>
 
 <body>
@@ -35,66 +35,96 @@
         <main class="main-content">
 
             <!-- Home page -->
-           <div id="page-home" class="page active">
+           <br id="page-home" class="page active"> 
+                <div class="card">
 
-            <div class="card">
-
-                <!-- Soil Moisture -->
-                <div class="card-item">
-                    <div class="card-row">
-                        <div class="card-icon">
-                            <img src="./image/soil_moisture_icon.jpg" alt="Soil moisture icon">
+                    <!-- Soil Moisture -->
+                    <div class="card-item">
+                        <div class="card-row">
+                            <div class="card-icon">
+                                <img src="./image/soil_moisture_icon.jpg" alt="Soil moisture icon">
+                            </div>
+                            <div id="soil" class="card-value">--%</div>
                         </div>
-                        <div id="soil" class="card-value">--%</div>
+                        <div class="card-largebody">Soil Moisture</div>
+                        <div class="card-smallbody">Độ ẩm trong đất</div>
                     </div>
-                    <div class="card-largebody">Soil Moisture</div>
-                    <div class="card-smallbody">Độ ẩm trong đất</div>
+
+                    <!-- Temperature -->
+                    <div class="card-item">
+                        <div class="card-row">
+                            <div class="card-icon">
+                                <img src="./image/temperature_icon.png" alt="Temperature icon">
+                            </div>
+                            <div id="temperature" class="card-value">--°C</div>
+                        </div>
+                        <div class="card-largebody">Temperature</div>
+                        <div class="card-smallbody">Nhiệt độ môi trường</div>
+                    </div>
+
+                    <!-- Humidity -->
+                    <div class="card-item">
+                        <div class="card-row">
+                            <div class="card-icon">
+                                <img src="./image/humidity_icon.jpg" alt="Humidity icon">
+                            </div>
+                            <div id="humidity" class="card-value">--%</div>
+                        </div>
+                        <div class="card-largebody">Humidity</div>
+                        <div class="card-smallbody">Độ ẩm không khí</div>
+                    </div>
+
+                    <!-- Light -->
+                    <div class="card-item">
+                        <div class="card-row">
+                            <div class="card-icon">
+                                <img src="./image/light_icon.png" alt="Light icon">
+                            </div>
+                            <div id="light" class="card-value">--lux</div>
+                        </div>
+                        <div class="card-largebody">Light</div>
+                        <div class="card-smallbody">Cường độ ánh sáng</div>
+                    </div>  
                 </div>
 
-                <!-- Temperature -->
-                <div class="card-item">
-                    <div class="card-row">
-                        <div class="card-icon">
-                            <img src="./image/temperature_icon.png" alt="Temperature icon">
+
+                <!---------- Green House Model ---------->
+                <h2 id='title-model'>Mô hình Green House</h2>
+
+                <div class="model-wrapper">
+
+                    <!-- Ảnh mô hình bên trái -->
+                    <img src="./image/iot_greenhouse_model.png" alt="Green House Model"  id="model-greenhouse" >
+
+                    <!-- Acculator bên phải -->
+                    <div class="acculator-homepage">
+
+                        <div class="acc-item">
+                            <span id="soil-dot" class="dot offline"></span>
+                            <span id="soil-text">OFF</span>
+                            <button id="Bumpbt" class="chip">Mở máy bơm nước</button>
                         </div>
-                        <div id="temperature" class="card-value">--°C</div>
-                    </div>
-                    <div class="card-largebody">Temperature</div>
-                    <div class="card-smallbody">Nhiệt độ môi trường</div>
-                </div>
 
-                <!-- Humidity -->
-                <div class="card-item">
-                    <div class="card-row">
-                        <div class="card-icon">
-                            <img src="./image/humidity_icon.jpg" alt="Humidity icon">
+                        <div class="acc-item">
+                            <span id="temp-dot" class="dot offline"></span>
+                            <span id="temp-text">OFF</span>
+                            <button id="fanbt" class="chip">Mở quạt</button>
                         </div>
-                        <div id="humidity" class="card-value">--%</div>
-                    </div>
-                    <div class="card-largebody">Humidity</div>
-                    <div class="card-smallbody">Độ ẩm không khí</div>
-                </div>
 
-                <!-- Light -->
-                <div class="card-item">
-                    <div class="card-row">
-                        <div class="card-icon">
-                            <img src="./image/light_icon.png" alt="Light icon">
+                        <div class="acc-item">
+                            <span id="light-dot" class="dot offline"></span>
+                            <span id="light-text">OFF</span>
+                            <button id="led" class="chip">Mở Đèn</button>
                         </div>
-                        <div id="light" class="card-value">--lux</div>
+
                     </div>
-                    <div class="card-largebody">Light</div>
-                    <div class="card-smallbody">Cường độ ánh sáng</div>
+
                 </div>
+           </div>
 
-            </div>
+            
 
-
-
-            <div>
-                <h2 id = 'title-model'>Mô hình Green House</h2>
-                <img src="greenhouse.jpg" alt = "Green House Model" id = 'model-greenhouse'>
-            </div>
+          
 
             <!-- Soil Moisture page-->
             <div id="page-soil" class="page">

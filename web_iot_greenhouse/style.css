@@ -13,10 +13,9 @@
    - Hàng cuối: footer full width
    ===================================================================== */
 body {
-    
     display: grid;
     grid-template-columns: 240px 1fr;   /* Sidebar | Content */
-    grid-template-rows: 70px 1fr 40px;  /* Header | Main | Footer */
+    grid-template-rows: 70px 1fr 50px;  /* Header | Main | Footer */
     grid-template-areas:
         "sidebar header"
         "sidebar main"
@@ -112,7 +111,7 @@ body {
 /* =====================================================================
    PAGE SPA – Ẩn/hiện từng trang khi click menu
    ===================================================================== */
-/* .page { display: none; } — phần này bạn đã comment lại */
+/* .page { display: none; } — Ẩn nội dung */
 
 .page.active {
     display: block;            /* Chỉ hiển thị page được kích hoạt */
@@ -129,7 +128,7 @@ body {
     align-items: center;        /* Căn giữa dọc */
     justify-content: center;    /* Căn giữa ngang */
     text-align: center;
-    font-size: 13px;
+    font-size: 15px;
     padding: 5px 0;
 }
 
@@ -200,7 +199,38 @@ body {
     font-size: 28px;
     font-weight: bold;
 }
+/*-------------------------model greenhouse---------------------- */
+#model-greenhouse {
+    width: 70%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
 
+/* Chứa model và acculator nằm ngang */
+.model-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;              /* khoảng cách giữa ảnh và acculator */
+    margin-top: 20px;
+}
+
+/* Acculator bên phải */
+.acculator-homepage {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;  /* xếp các acc-item theo cột */
+    gap: 50px;
+}
+
+/* Mỗi item (điểm + text + nút) nằm trên 1 hàng */
+.acc-item {
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
 /* =====================================================================
    CHUNG CHO TẤT CẢ PAGE SPA (tiêu đề)
