@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
 
-
                 fanVideo.hidden = true;   // tắt video
             }
         });
@@ -54,14 +53,16 @@ document.addEventListener("DOMContentLoaded", () => {
         ledBtn.addEventListener("click", () => {
             const dot = document.getElementById("light-dot");
             const txt = document.getElementById("light-text");
+            const glow = document.getElementById("light-glow");
 
             if (txt.textContent === "OFF") {
                 txt.textContent = "ON";
                 dot.classList.replace("offline", "online");
-
+                glow.classList.replace("hide", "show");
             } else {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
+                glow.classList.replace("show", "hide");
 
             }
         });
