@@ -26,7 +26,7 @@
                 <li><a href="#" onclick="showPage('page-home')">Home</a></li>
                 <li><a href="#" onclick="showPage('page-soil')">Soil Moisture</a></li>
                 <li><a href="#" onclick="showPage('page-temp')">Temperature</a></li>
-                <li><a href="#" onclick="showPage('page-hum')">Humidity</a></li>
+                <li><a href="#" onclick="showPage('page-humidity')">Humidity</a></li>
                 <li><a href="#" onclick="showPage('page-light')">Light</a></li>
 
             </ul>
@@ -35,7 +35,7 @@
         <main class="main-content">
 
             <!-- Home page -->
-           <br id="page-home" class="page active"> 
+           <div id="page-home" class="page active">
                 <div class="card">
 
                     <!-- Soil Moisture -->
@@ -120,7 +120,7 @@
                     </div>
 
                 </div>
-           </div>
+           </div> <!--Close page-home -->
 
             
 
@@ -146,6 +146,7 @@
                         </select>
                     </div>
                     <canvas id="soil-chart"></canvas>
+                </div>
             </div>
 
             <!-- Temperature page-->
@@ -155,6 +156,7 @@
                     <span id="temp-text">OFF</span>
                     <button id="fanbt" class="chip">Mở quạt</button>
                 </div>
+
                 <div class="temp-chart">
                     <h2>Temperature Chart</h2>
                     <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
@@ -168,6 +170,7 @@
                         </select>
                     </div>
                     <canvas id="temp-chart"></canvas>
+                </div>
             </div>
 
             <!-- Humidity page-->
@@ -189,6 +192,7 @@
                         </select>
                     </div>
                     <canvas id="humidity-chart"></canvas>
+                </div>
             </div>
 
             <!-- Light page-->
@@ -211,6 +215,7 @@
                         </select>
                     </div>
                     <canvas id="light-chart"></canvas>
+                </div>
             </div>
         </main>
 

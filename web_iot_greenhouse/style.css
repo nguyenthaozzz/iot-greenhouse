@@ -102,7 +102,7 @@ body {
    ===================================================================== */
 .main-content {
     grid-area: main;
-    padding: 20px;
+    padding: 10px 20px;
     background: #f4f6f8;
     overflow-y: auto;          /* Cho phép cuộn khi nội dung dài */
 }
@@ -140,7 +140,7 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);   /* 4 cột */
     gap: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 
@@ -355,3 +355,14 @@ canvas {
 .Light-chart {
     margin-top: 10px;
 }
+
+
+/* All pages hidden except active one */
+.page { 
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+

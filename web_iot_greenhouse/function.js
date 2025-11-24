@@ -1,43 +1,65 @@
-document.getElementById("Bumpbt").addEventListener("click", () => {
-    let dot = document.getElementById("soil-dot");
-    let txt = document.getElementById("soil-text");
-    let btn = document.getElementById("Bumpbt");
+document.addEventListener("DOMContentLoaded", () => {
+    // ======== SPA PAGE SWITCH =========
+    window.showPage = function (pageId) {
+        document.querySelectorAll(".page").forEach(p => {
+            p.classList.remove("active");
+        });
+        document.getElementById(pageId).classList.add("active");
+    };
+    // ======== SOIL PUMP =========
+    const pumpBtn = document.getElementById("Bumpbt");
+    if (pumpBtn) {
+        pumpBtn.addEventListener("click", () => {
+            const dot = document.getElementById("soil-dot");
+            const txt = document.getElementById("soil-text");
 
-    if (txt.textContent === "OFF") {
-        txt.textContent = "ON";
-        dot.classList.replace("offline", "online");
-        btn.textContent = "Tắt máy bơm nước";
-    } else {
-        txt.textContent = "OFF";
-        dot.classList.replace("online", "offline");
-        btn.textContent = "Mở máy bơm nước";
+            if (txt.textContent === "OFF") {
+                txt.textContent = "ON";
+                dot.classList.replace("offline", "online");
+                pumpBtn.textContent = "Tắt máy bơm nước";
+            } else {
+                txt.textContent = "OFF";
+                dot.classList.replace("online", "offline");
+                pumpBtn.textContent = "Mở máy bơm nước";
+            }
+        });
     }
-});
-document.getElementById("fanbt").addEventListener("click", () => {
-    let dot = document.getElementById("temp-dot");
-    let txt = document.getElementById("temp-text");
-    let btn = document.getElementById("fanbt");
-    if (txt.textContent === "OFF") {
-        txt.textContent = "ON";
-        dot.classList.replace("offline", "online");
-        btn.textContent = "Tắt quạt";
-    } else {
-        txt.textContent = "OFF";
-        dot.classList.replace("online", "offline");
-        btn.textContent = "Mở quạt";
+    // ======== FAN =========
+    const fanBtn = document.getElementById("fanbt");
+    if (fanBtn) {
+        fanBtn.addEventListener("click", () => {
+            const dot = document.getElementById("temp-dot");
+            const txt = document.getElementById("temp-text");
+
+            if (txt.textContent === "OFF") {
+                txt.textContent = "ON";
+                dot.classList.replace("offline", "online");
+                fanBtn.textContent = "Tắt quạt";
+            } else {
+                txt.textContent = "OFF";
+                dot.classList.replace("online", "offline");
+                fanBtn.textContent = "Mở quạt";
+            }
+        });
     }
-});
-document.getElementById("led").addEventListener("click", () => {
-    let dot = document.getElementById("light-dot");
-    let txt = document.getElementById("light-text");
-    let btn = document.getElementById("led");
-    if (txt.textContent === "OFF") {
-        txt.textContent = "ON";
-        dot.classList.replace("offline", "online");
-        btn.textContent = "Tắt đèn";
-    } else {
-        txt.textContent = "OFF";
-        dot.classList.replace("online", "offline");
-        btn.textContent = "Mở đèn";
+    // ======== LIGHT =========
+    const ledBtn = document.getElementById("led");
+    if (ledBtn) {
+        ledBtn.addEventListener("click", () => {
+            const dot = document.getElementById("light-dot");
+            const txt = document.getElementById("light-text");
+
+            if (txt.textContent === "OFF") {
+                txt.textContent = "ON";
+                dot.classList.replace("offline", "online");
+                ledBtn.textContent = "Tắt đèn";
+            } else {
+                txt.textContent = "OFF";
+                dot.classList.replace("online", "offline");
+                ledBtn.textContent = "Mở Đèn";
+            }
+        });
     }
+    // YEAR FOOTER
+    document.getElementById("year").textContent = new Date().getFullYear();
 });
