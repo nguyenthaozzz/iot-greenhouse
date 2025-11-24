@@ -239,6 +239,19 @@ body {
     margin: 20px 0 10px 0;
     font-size: 22px;
 }
+.page-header {
+    display: flex;
+    justify-content: space-between; /* đẩy title sang trái, indicator sang phải */
+    align-items: center;            /* căn giữa theo chiều dọc */
+    margin-bottom: 15px;
+}
+
+.indicator-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* khoảng cách giữa dot – text – button */
+}
+
 
 
 /* =====================================================================

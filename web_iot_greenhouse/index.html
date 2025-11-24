@@ -128,92 +128,66 @@
 
             <!-- Soil Moisture page-->
             <div id="page-soil" class="page">
-                <div class="soil-indicator">
-                    <span id="soil-dot" class="dot offline"></span>
-                    <span id="soil-text">OFF</span>
-                    <button id="Bumpbt" class="chip">Mở máy bơm nước</button>
-                </div>
-                <div class="soil-chart">
+                <div class="page-header">
                     <h2>Soil Moisture Chart</h2>
-                    <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
-                    <div class="time-range">
-                        <label for="rangeSelect">Khoảng thời gian:</label>
-                        <select class="rangeSelect">
-                            <option value="15m" selected>15 phút</option>
-                            <option value="1h">1 giờ</option>
-                            <option value="6h">6 giờ</option>
-                            <option value="1d">1 ngày</option>
-                        </select>
+
+                    <div class="indicator-group">
+                        <span id="soil-dot" class="dot offline"></span>
+                        <span id="soil-text">OFF</span>
+                        <button id="Bumpbt" class="chip">Mở máy bơm nước</button>
                     </div>
+                </div>
+                <div>
+                    <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
                     <canvas id="soil-chart"></canvas>
                 </div>
             </div>
 
             <!-- Temperature page-->
             <div id="page-temp" class="page">
-                <div class="temp-indicator">
-                    <span id="temp-dot" class="dot offline"></span>
-                    <span id="temp-text">OFF</span>
-                    <button id="fanbt" class="chip">Mở quạt</button>
-                </div>
+                    <div class="page-header">
+                        <h2>Temperature Chart</h2>
 
-                <div class="temp-chart">
-                    <h2>Temperature Chart</h2>
-                    <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
-                    <div class="time-range">
-                        <label for="rangeSelect">Khoảng thời gian:</label>
-                        <select class="rangeSelect">
-                            <option value="15m" selected>15 phút</option>
-                            <option value="1h">1 giờ</option>
-                            <option value="6h">6 giờ</option>
-                            <option value="1d">1 ngày</option>
-                        </select>
+                        <div class="indicator-group">
+                            <span id="temp-dot" class="dot offline"></span>
+                            <span id="temp-text">OFF</span>
+                            <button id="fanbt" class="chip">Mở quạt</button>
+                        </div>
                     </div>
-                    <canvas id="temp-chart"></canvas>
-                </div>
+
+                    <div>
+                        <!-- Biểu đồ độ ẩm đất sẽ được hiển thị ở đây -->
+                        <canvas id="temp-chart"></canvas>
+                    </div>
             </div>
 
             <!-- Humidity page-->
             <div id="page-humidity" class="page">
-                <div class="humidity-indicator">
-                    <span id="humidity-dot" class="dot offline"></span>
-                    <span id="humidity-text">OFF</span>
-                </div>
-                <div class="humidity-chart">
+                <div class="page-header">
                     <h2>Humidity Chart</h2>
+                </div>
+
+                <div>      
                     <!-- Biểu đồ độ ẩm không khí sẽ được hiển thị ở đây -->
-                    <div class="time-range">
-                        <label for="rangeSelect">Khoảng thời gian:</label>
-                        <select class="rangeSelect">
-                            <option value="15m" selected>15 phút</option>
-                            <option value="1h">1 giờ</option>
-                            <option value="6h">6 giờ</option>
-                            <option value="1d">1 ngày</option>
-                        </select>
-                    </div>
                     <canvas id="humidity-chart"></canvas>
                 </div>
             </div>
 
             <!-- Light page-->
             <div id="page-light" class="page">
-                <div class="light-indicator">
-                    <span id="light-dot" class="dot offline"></span>
-                    <span id="light-text">OFF</span>
-                    <button id="led" class="chip">Mở Đèn</button>
+                <div class="page-header">
+                        <h2>Light Chart</h2>
+
+                        <div class="indicator-group">
+                            <span id="light-dot" class="dot offline"></span>
+                            <span id="light-text">OFF</span>
+                            <button id="led" class="chip">Mở Đèn</button>
+                        </div>
                 </div>
-                <div class="Light-chart">
-                    <h2>Light Chart</h2>
+
+                <div>
                     <!-- Biểu cường độ ánh sáng sẽ được hiển thị ở đây -->
-                    <div class="time-range">
-                        <label for="rangeSelect">Khoảng thời gian:</label>
-                        <select class="rangeSelect">
-                            <option value="15m" selected>15 phút</option>
-                            <option value="1h">1 giờ</option>
-                            <option value="6h">6 giờ</option>
-                            <option value="1d">1 ngày</option>
-                        </select>
-                    </div>
+                    
                     <canvas id="light-chart"></canvas>
                 </div>
             </div>
