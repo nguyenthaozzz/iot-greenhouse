@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // ======== FAN =========
     const fanBtn = document.getElementById("fanbt");
+    const fanVideo = document.getElementById("fan-video");
+
     if (fanBtn) {
         fanBtn.addEventListener("click", () => {
             const dot = document.getElementById("temp-dot");
@@ -35,10 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 txt.textContent = "ON";
                 dot.classList.replace("offline", "online");
                 fanBtn.textContent = "Tắt quạt";
+
+                fanVideo.hidden = false;  // bật video
             } else {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
                 fanBtn.textContent = "Mở quạt";
+
+                fanVideo.hidden = true;   // tắt video
             }
         });
     }
@@ -48,15 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
         ledBtn.addEventListener("click", () => {
             const dot = document.getElementById("light-dot");
             const txt = document.getElementById("light-text");
+            const glow = document.getElementById("light-glow");
 
             if (txt.textContent === "OFF") {
                 txt.textContent = "ON";
                 dot.classList.replace("offline", "online");
                 ledBtn.textContent = "Tắt đèn";
+                glow.classList.replace("hide", "show");
             } else {
                 txt.textContent = "OFF";
                 dot.classList.replace("online", "offline");
                 ledBtn.textContent = "Mở Đèn";
+                glow.classList.replace("show", "hide");
+
             }
         });
     }
