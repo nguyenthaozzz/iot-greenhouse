@@ -105,7 +105,6 @@ body {
     padding: 10px 20px;
     background: #f4f6f8;
     overflow-y: auto;          /* Cho phép cuộn khi nội dung dài */
-    min-height: calc(100vh - 70px - 50px);  /* header=70px, footer=50px */
 }
 
 
@@ -240,19 +239,6 @@ body {
     margin: 20px 0 10px 0;
     font-size: 22px;
 }
-.page-header {
-    display: flex;
-    justify-content: space-between; /* đẩy title sang trái, indicator sang phải */
-    align-items: center;            /* căn giữa theo chiều dọc */
-    margin-bottom: 15px;
-}
-
-.indicator-group {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* khoảng cách giữa dot – text – button */
-}
-
 
 
 /* =====================================================================
@@ -360,6 +346,7 @@ canvas {
 /* =====================================================================
    PAGE: LIGHT
    ===================================================================== */
+
 .light-indicator {
     display: flex;
     align-items: center;
@@ -380,3 +367,24 @@ canvas {
     display: block;
 }
 
+.fan-video {
+    position: absolute;
+    width: 110px;    /* chỉnh cho khớp cái quạt trong ảnh */
+    top: 329px;      /* chỉnh lại theo vị trí quạt trong ảnh */
+    right: 404px;    /* chỉnh lại cho khớp */
+    border-radius: 8px;
+    pointer-events: none; /* để video không bị click */
+}
+.light-glow {
+    width: 200px;
+    position: absolute;
+    top: 335px; 
+    right: 755px;
+    pointer-events: none;
+}
+.light-glow.show {
+    opacity: 1;
+}
+.light-glow.hide {
+    opacity: 0;
+}
