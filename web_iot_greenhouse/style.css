@@ -13,10 +13,10 @@
    - Hàng cuối: footer full width
    ===================================================================== */
 body {
-    height: 100vh;
+    
     display: grid;
     grid-template-columns: 240px 1fr;   /* Sidebar | Content */
-    grid-template-rows: 70px 1fr 30px;  /* Header | Main | Footer */
+    grid-template-rows: 70px 1fr 40px;  /* Header | Main | Footer */
     grid-template-areas:
         "sidebar header"
         "sidebar main"
