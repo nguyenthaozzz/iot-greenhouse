@@ -37,8 +37,8 @@
     <script type="module">
         // 1. Cấu hình Firebase (Y hệt project của bạn)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
-
+        import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyBr7tBAHwXaGBL0ceLK9c1UDSdYRq_cuZs",
             authDomain: "project-greenhouse-5970e.firebaseapp.com",
@@ -79,6 +79,8 @@
                 const fakeHum = getRandom(60, 90);          // Độ ẩm: 60 - 90 %
                 const fakeSoil = getRandom(40, 80);         // Đất: 40 - 80 %
                 const fakeLight = getRandom(100, 1000);     // Ánh sáng: 100 - 1000 lux
+                
+                const timestamp = Date.now(); // Lấy thời gian hiện tại
 
                 // 2. Gửi lên Firebase (Dùng hàm set để ghi đè giá trị cũ)
                 // Lưu ý: Đường dẫn phải khớp với web chính: Green_house/temp, hum, soil_hum, light
@@ -87,6 +89,24 @@
                 set(ref(db, 'Green_house/soil_hum'), parseInt(fakeSoil));
                 set(ref(db, 'Green_house/light'), parseInt(fakeLight));
 
+                // --- VIỆC 2: LƯU VÀO LỊCH SỬ (Dùng push - MỚI) ---
+                // Firebase sẽ tự sinh ra một ID ngẫu nhiên cho mỗi lần push
+                push(ref(db, 'Green_house_logs/temp'), {
+                    value: parseFloat(fakeTemp),
+                    time: timestamp
+                });
+                push(ref(db, 'Green_house_logs/hum'), {
+                    value: parseFloat(fakeHum),
+                    time: timestamp
+                });
+                push(ref(db, 'Green_house_logs/soil'), {
+                    value: parseFloat(fakeSoil),
+                    time: timestamp
+                });
+                push(ref(db, 'Green_house_logs/light'), {
+                    value: parseFloat(fakeLight),
+                    time: timestamp
+                });
                 // 3. Hiển thị log chơi cho vui
                 valuesDiv.innerHTML = `
                     <p>Nhiệt độ: ${fakeTemp}°C</p>
