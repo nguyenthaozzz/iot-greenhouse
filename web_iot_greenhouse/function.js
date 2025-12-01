@@ -35,118 +35,177 @@
 
 document.addEventListener("DOMContentLoaded", () => {  // Đảm bảo HTML load xong mới chạy JS
 
-    // ======================= CHART.JS CONFIG =======================
-    function createChartConfig(label, color) {
-        return {
+   // ================================================================
+        // PHẦN 2: CẤU HÌNH BIỂU ĐỒ (CHART.JS)
+        // ================================================================
+        // Hàm tạo cấu hình biểu đồ nhanh để đỡ phải viết lại nhiều lần
+        function createChartConfig(label, color) {
+            return {
+                type: 'line',
+                data: {
+                    labels: [], // Thời gian
+                    datasets: [{
+                        label: label,
+                        data: [], // Giá trị
+                        borderColor: color,
+                        backgroundColor: color.replace(')', ', 0.2)').replace('rgb', 'rgba'), // Tạo màu nền mờ
+                        borderWidth: 2,
+                        tension: 0.4, // Đường cong mềm mại
+                        fill: true,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Để biểu đồ co giãn tốt hơn
+                    scales: {
+                        x: { title: { display: true, text: 'Thời gian' },
+                             grid: {
+                                display: true //tắt lưới dọc
+                             }        
+                    },
+                        y: { beginAtZero: false ,
+                            grid: {
+                                display: true //tắt lưới ngang
+                             }
+                    },
+                    animation: false // Tắt animation để realtime mượt hơn
+                }
+            }
+        };
+        }
+        // ================= BIỂU ĐỒ NHIỆT ĐỘ - ĐỘ ẨM =================
+        const ctxHumTemp = document.getElementById('temp-chart').getContext('2d');
+        const HumTempchart = new Chart(ctxHumTemp, {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [{
-                    label: label,
+                    label: 'Nhiệt độ (°C)',
                     data: [],
-                    borderColor: color,
-                    backgroundColor: color.replace(')', ',0.2)').replace('rgb', 'rgba'),
+                    borderColor: 'rgba(231, 76, 60)',
+                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
                     borderWidth: 2,
+                    yAxisID: 'y1',
                     tension: 0.4,
-                    fill: true,
-                    pointRadius: 3
+                    fill: false, // Không tô màu dưới đường biểu diễn
+                    pointRadius: 3 // Điểm tròn trên đường biểu diễn
+                }, {
+                    label: 'Độ ẩm (%)',
+                    data: [],
+                    borderColor: 'rgba(54, 162, 235)',
+                    //backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2,
+                    yAxisID: 'y2',
+                    tension: 0.4,
+                    fill: false, // Không tô màu dưới đường biểu diễn
+                    pointRadius: 3 // Điểm tròn trên đường biểu diễn
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, // Đảm bảo biểu đồ co giãn theo kích thuoc
+                maintainAspectRatio: false, // Không giữ tỉ lệ cố định
                 scales: {
-                    x: { title: { display: true, text: "Thời gian" }, grid: { display: false }},
-                    y: { beginAtZero: false, grid: { display: false }},
-                },
-                animation: false
+                    x: {title: {display: true, text: 'Thời gian'},
+                        grid: {display: true} // Ẩn lưới ngang}
+                        },
+                    y1: { beginAtzero: false,
+                        title: {display: true,
+                                text: 'Nhiệt độ (°C)'},
+                        position: 'left',
+                        grid: {display: false} // Ẩn lưới dọc
+                        },
+                    y2: { beginAtzero: false,
+                        title: {display: true,
+                                text: 'Độ ẩm (%)'},
+                        position: 'right',
+                        grid: {display: true} 
+                    }
+                    }
             }
-        };
-    }
-
-    // ======================= NHIỆT ĐỘ =======================
-    const ctxTemp = document.getElementById('temp-chart').getContext('2d');
-    const tempChart = new Chart(ctxTemp, createChartConfig('Nhiệt độ (°C)', 'rgb(231, 76, 60)'));
-
-    onValue(tempRef, snapshot => {
-        const data = snapshot.val();
-        nhietDoElement.innerText = (data ?? "--") + "°C";
-
-        if (data !== null) {
-            const t = new Date().toLocaleTimeString();
-            tempChart.data.labels.push(t);
-            tempChart.data.datasets[0].data.push(data);
-
-            if (tempChart.data.labels.length > 20) {
-                tempChart.data.labels.shift();
-                tempChart.data.datasets[0].data.shift();
+        });
+        let lasttemp =null;
+        let lasthum =null;
+        function update_combo_chart () {
+            const now = new Date().toLocaleTimeString('vi-VN');
+            HumTempchart.data.labels.push(now);
+            HumTempchart.data.datasets[0].data.push(lasttemp);
+            HumTempchart.data.datasets[1].data.push(lasthum);
+            // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ
+            if (HumTempchart.data.labels.length > 20) {
+                HumTempchart.data.labels.shift();
+                HumTempchart.data.datasets[0].data.shift();
+                HumTempchart.data.datasets[1].data.shift();
             }
-            tempChart.update('none');
+            HumTempchart.update('none'); // Cập nhật biểu đồ mà không có animation
         }
-    });
-
-    // ======================= HƠI NƯỚC / ĐỘ ẨM =======================
-    const ctxHum = document.getElementById('humidity-chart').getContext('2d');
-    const humChart = new Chart(ctxHum, createChartConfig('Độ ẩm (%)', 'rgb(54,162,235)'));
-
-    onValue(humRef, snapshot => {
-        const data = snapshot.val();
-        doAmElement.innerText = (data ?? "--") + "%";
-
-        if (data !== null) {
-            const t = new Date().toLocaleTimeString();
-            humChart.data.labels.push(t);
-            humChart.data.datasets[0].data.push(data);
-
-            if (humChart.data.labels.length > 20) {
-                humChart.data.labels.shift();
-                humChart.data.datasets[0].data.shift();
+        // 6. Lắng nghe dữ liệu thay đổi (Realtime)
+        
+        // Nhiệt độ
+        //const ctxTemp = document.getElementById('temp-chart').getContext('2d');
+        //const tempChart = new Chart(ctxTemp, createChartConfig('Nhiệt độ (°C)', 'rgb(231, 76, 60)')); // Màu đỏ
+        onValue(tempRef, (snapshot) => {
+            const data = snapshot.val();
+            // Kiểm tra nếu có dữ liệu thì hiển thị, không thì hiện --
+            nhietDoElement.innerText = (data !== null ? data : "--") + "°C";
+            if (data !== null) {
+                lasttemp = data;
+                update_combo_chart();
             }
-            humChart.update('none');
-        }
-    });
+        });
 
-    // ======================= ĐỘ ẨM ĐẤT =======================
-    const ctxSoil = document.getElementById('soil-chart').getContext('2d');
-    const soilChart = new Chart(ctxSoil, createChartConfig('Độ ẩm đất (%)', 'rgb(0,128,0)'));
-
-    onValue(soilRef, snapshot => {
-        const data = snapshot.val();
-        soilElement.innerText = (data ?? "--") + "%";
-
-        if (data !== null) {
-            const t = new Date().toLocaleTimeString();
-            soilChart.data.labels.push(t);
-            soilChart.data.datasets[0].data.push(data);
-
-            if (soilChart.data.labels.length > 20) {
-                soilChart.data.labels.shift();
-                soilChart.data.datasets[0].data.shift();
+        // Độ ẩm không khí
+        //const ctxHum = document.getElementById('humidity-chart').getContext('2d');
+        //const humChart = new Chart(ctxHum, createChartConfig('Độ ẩm (%)', 'rgb(54, 162, 235)')); // Màu xanh dương
+        onValue(humRef, (snapshot) => {
+            const data = snapshot.val();
+            doAmElement.innerText = (data !== null ? data : "--") + "%";
+            if (data !== null) {
+                lasthum = data;
+                update_combo_chart();
             }
-            soilChart.update('none');
-        }
-    });
+        });
 
-    // ======================= ÁNH SÁNG =======================
-    const ctxLight = document.getElementById('light-chart').getContext('2d');
-    const lightChart = new Chart(ctxLight, createChartConfig('Ánh sáng (lux)', 'rgb(255,206,86)'));
-
-    onValue(lightRef, snapshot => {
-        const data = snapshot.val();
-        lightElement.innerText = (data ?? "--") + " lux";
-
-        if (data !== null) {
-            const t = new Date().toLocaleTimeString();
-            lightChart.data.labels.push(t);
-            lightChart.data.datasets[0].data.push(data);
-
-            if (lightChart.data.labels.length > 20) {
-                lightChart.data.labels.shift();
-                lightChart.data.datasets[0].data.shift();
+        // Độ ẩm đất
+        const ctxSoil = document.getElementById('soil-chart').getContext('2d');
+        const soilChart = new Chart(ctxSoil, createChartConfig('Độ ẩm đất (%)', 'rgb(0, 128, 0)')); // Màu xanh lá
+        onValue(soilRef, (snapshot) => {
+            const data = snapshot.val();
+            soilElement.innerText = (data !== null ? data : "--") + "%";
+            if (data !== null) {
+                document.getElementById("soil-bar-fill").style.width = (100 - data) + "%"; 
+                const currentTime = new Date().toLocaleTimeString();
+                // Cập nhật biểu đồ
+                soilChart.data.labels.push(currentTime);
+                soilChart.data.datasets[0].data.push(data);
+                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
+                if (soilChart.data.labels.length > 20) {
+                    soilChart.data.labels.shift();
+                    soilChart.data.datasets[0].data.shift();
+                    }
+                soilChart.update('none'); // Cập nhật biểu đồ mà không có animation
             }
-            lightChart.update('none');
-        }
-    });
+        });
+
+        // Ánh sáng
+        const ctxLight = document.getElementById('light-chart').getContext('2d');
+        const lightChart = new Chart(ctxLight, createChartConfig('Cường độ ánh sáng (lux)', 'rgb(255, 206, 86)')); // Màu vàng
+        onValue(lightRef, (snapshot) => {
+            const data = snapshot.val();
+            lightElement.innerText = (data !== null ? data : "--") + " lux";
+            if (data !== null) {
+                const currentTime = new Date().toLocaleTimeString();
+                // Cập nhật biểu đồ
+                lightChart.data.labels.push(currentTime);
+                lightChart.data.datasets[0].data.push(data);
+                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
+                if (lightChart.data.labels.length > 20) {
+                    lightChart.data.labels.shift();
+                    lightChart.data.datasets[0].data.shift();
+                    }
+                lightChart.update('none'); // Cập nhật biểu đồ mà không có animation
+            }
+        });
 
 
     
