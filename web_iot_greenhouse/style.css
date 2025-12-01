@@ -211,8 +211,10 @@ body {
 
 /* KHỐI QUAN TRỌNG: Cột trái chứa ảnh và linh kiện */
 .model-view {
-    position: relative; /* Làm mốc tọa độ cho linh kiện bên trong */
-    width: 70%;         /* Chiếm 70% chiều rộng */
+    position: relative;
+    width: 100%;
+    max-width: 850px;      /* có thể đổi tuỳ layout */
+    margin: auto;
 }
 
 /* Ảnh nền nhà kính */
