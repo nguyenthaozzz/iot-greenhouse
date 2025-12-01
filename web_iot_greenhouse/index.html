@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>IoT Green House</title>
+    <title>IoT GreenHouse</title>
 </head>
 
 <body>
     <!-- HEADER -->
     <header class="topbar">
-        <h1 id="title-header">IOT GREEN HOUSE</h1>
+        <h1 id="title-header">IOT GREENHOUSE</h1>
     </header>
 
     <!-- SIDEBAR -->
@@ -183,169 +183,11 @@
     </footer>
 
     <script src="./function.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="module" src="./function.js"></script>
 
 
-    <!-- FireBase-->
-    <script type="module">
-        // 1. Import đầy đủ các thư viện cần thiết (App và Database)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-        // QUAN TRỌNG: Import thêm các hàm thao tác với Database
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
-
-        // 2. Cấu hình Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyBr7tBAHwXaGBL0ceLK9c1UDSdYRq_cuZs",
-            authDomain: "project-greenhouse-5970e.firebaseapp.com",
-            databaseURL: "https://project-greenhouse-5970e-default-rtdb.firebaseio.com",
-            projectId: "project-greenhouse-5970e",
-            storageBucket: "project-greenhouse-5970e.firebasestorage.app",
-            messagingSenderId: "476065711518",
-            appId: "1:476065711518:web:fb1e3df380f3b24cfac28f",
-            measurementId: "G-4YTZQB881G"
-        };
-
-        // 3. Khởi tạo Firebase App và Database
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const database = getDatabase(app); // Khởi tạo database service
-
-        // 4. Lấy các thẻ HTML để hiển thị
-        const nhietDoElement = document.getElementById('temperature');
-        const doAmElement = document.getElementById('humidity');
-        const soilElement = document.getElementById('soil');
-        const lightElement = document.getElementById('light');
-
-        // 5. Tạo tham chiếu (Reference) đến đường dẫn dữ liệu
-        // Theo code cũ của bạn đường dẫn là: Green_house -> temp/hum/soil_hum/light
-        const tempRef = ref(database, 'Green_house/temp');
-        const humRef = ref(database, 'Green_house/hum');
-        const soilRef = ref(database, 'Green_house/soil_hum');
-        const lightRef = ref(database, 'Green_house/light');
-
-        // ================================================================
-        // PHẦN 2: CẤU HÌNH BIỂU ĐỒ (CHART.JS)
-        // ================================================================
-        // Hàm tạo cấu hình biểu đồ nhanh để đỡ phải viết lại nhiều lần
-        function createChartConfig(label, color) {
-            return {
-                type: 'line',
-                data: {
-                    labels: [], // Thời gian
-                    datasets: [{
-                        label: label,
-                        data: [], // Giá trị
-                        borderColor: color,
-                        backgroundColor: color.replace(')', ', 0.2)').replace('rgb', 'rgba'), // Tạo màu nền mờ
-                        borderWidth: 2,
-                        tension: 0.4, // Đường cong mềm mại
-                        fill: true,
-                        pointRadius: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // Để biểu đồ co giãn tốt hơn
-                    scales: {
-                        x: { title: { display: true, text: 'Thời gian' },
-                             grid: {
-                                display: false //tắt lưới dọc
-                             }        
-                    },
-                        y: { beginAtZero: false ,
-                            grid: {
-                                display: false //tắt lưới ngang
-                             }
-                    },
-                    animation: false // Tắt animation để realtime mượt hơn
-                }
-            }
-        };
-        }
-        // 6. Lắng nghe dữ liệu thay đổi (Realtime)
-        
-        // Nhiệt độ
-        const ctxTemp = document.getElementById('temp-chart').getContext('2d');
-        const tempChart = new Chart(ctxTemp, createChartConfig('Nhiệt độ (°C)', 'rgb(231, 76, 60)')); // Màu đỏ
-        onValue(tempRef, (snapshot) => {
-            const data = snapshot.val();
-            // Kiểm tra nếu có dữ liệu thì hiển thị, không thì hiện --
-            nhietDoElement.innerText = (data !== null ? data : "--") + "°C";
-            if (data !== null) {
-                const currentTime = new Date().toLocaleTimeString();
-                // Cập nhật biểu đồ
-                tempChart.data.labels.push(currentTime);
-                tempChart.data.datasets[0].data.push(data);
-                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ
-                if (tempChart.data.labels.length > 20) {
-                    tempChart.data.labels.shift();
-                    tempChart.data.datasets[0].data.shift();
-                }
-                tempChart.update('none'); // Cập nhật biểu đồ mà không có animation
-            }
-        });
-
-        // Độ ẩm không khí
-        const ctxHum = document.getElementById('humidity-chart').getContext('2d');
-        const humChart = new Chart(ctxHum, createChartConfig('Độ ẩm (%)', 'rgb(54, 162, 235)')); // Màu xanh dương
-        onValue(humRef, (snapshot) => {
-            const data = snapshot.val();
-            doAmElement.innerText = (data !== null ? data : "--") + "%";
-            if (data !== null) {
-                const currentTime = new Date().toLocaleTimeString();
-                // Cập nhật biểu đồ
-                humChart.data.labels.push(currentTime);
-                humChart.data.datasets[0].data.push(data);
-                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
-                if (humChart.data.labels.length > 20) {
-                    humChart.data.labels.shift();
-                    humChart.data.datasets[0].data.shift();
-                    }
-                humChart.update('none'); // Cập nhật biểu đồ mà không có animation
-            }
-        });
-
-        // Độ ẩm đất
-        const ctxSoil = document.getElementById('soil-chart').getContext('2d');
-        const soilChart = new Chart(ctxSoil, createChartConfig('Độ ẩm đất (%)', 'rgb(0, 128, 0)')); // Màu xanh lá
-        onValue(soilRef, (snapshot) => {
-            const data = snapshot.val();
-            soilElement.innerText = (data !== null ? data : "--") + "%";
-            if (data !== null) {
-                const currentTime = new Date().toLocaleTimeString();
-                // Cập nhật biểu đồ
-                soilChart.data.labels.push(currentTime);
-                soilChart.data.datasets[0].data.push(data);
-                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
-                if (soilChart.data.labels.length > 20) {
-                    soilChart.data.labels.shift();
-                    soilChart.data.datasets[0].data.shift();
-                    }
-                soilChart.update('none'); // Cập nhật biểu đồ mà không có animation
-            }
-        });
-
-        // Ánh sáng
-        const ctxLight = document.getElementById('light-chart').getContext('2d');
-        const lightChart = new Chart(ctxLight, createChartConfig('Cường độ ánh sáng (lux)', 'rgb(255, 206, 86)')); // Màu vàng
-        onValue(lightRef, (snapshot) => {
-            const data = snapshot.val();
-            lightElement.innerText = (data !== null ? data : "--") + " lux";
-            if (data !== null) {
-                const currentTime = new Date().toLocaleTimeString();
-                // Cập nhật biểu đồ
-                lightChart.data.labels.push(currentTime);
-                lightChart.data.datasets[0].data.push(data);
-                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
-                if (lightChart.data.labels.length > 20) {
-                    lightChart.data.labels.shift();
-                    lightChart.data.datasets[0].data.shift();
-                    }
-                lightChart.update('none'); // Cập nhật biểu đồ mà không có animation
-            }
-        });
-
-    </script>
 
     </body>
 </html>

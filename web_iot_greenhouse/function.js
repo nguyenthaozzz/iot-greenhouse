@@ -1,5 +1,155 @@
+  // ======================= FIREBASE IMPORT =======================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+    // ======================= FIREBASE CONFIG =======================
+    const firebaseConfig = {
+        apiKey: "AIzaSyBr7tBAHwXaGBL0ceLK9c1UDSdYRq_cuZs",
+        authDomain: "project-greenhouse-5970e.firebaseapp.com",
+        databaseURL: "https://project-greenhouse-5970e-default-rtdb.firebaseio.com",
+        projectId: "project-greenhouse-5970e",
+        storageBucket: "project-greenhouse-5970e.firebasestorage.app",
+        messagingSenderId: "476065711518",
+        appId: "1:476065711518:web:fb1e3df380f3b24cfac28f",
+        measurementId: "G-4YTZQB881G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+
+    // ======================= DOM ELEMENTS =======================
+    const nhietDoElement = document.getElementById('temperature');
+    const doAmElement = document.getElementById('humidity');
+    const soilElement = document.getElementById('soil');
+    const lightElement = document.getElementById('light');
+
+    // ======================= FIREBASE REFERENCE =======================
+    const tempRef = ref(database, 'Green_house/temp');
+    const humRef  = ref(database, 'Green_house/hum');
+    const soilRef = ref(database, 'Green_house/soil_hum');
+    const lightRef= ref(database, 'Green_house/light');
+
+
+
 document.addEventListener("DOMContentLoaded", () => {  // Đảm bảo HTML load xong mới chạy JS
 
+    // ======================= CHART.JS CONFIG =======================
+    function createChartConfig(label, color) {
+        return {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: label,
+                    data: [],
+                    borderColor: color,
+                    backgroundColor: color.replace(')', ',0.2)').replace('rgb', 'rgba'),
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: "Thời gian" }, grid: { display: false }},
+                    y: { beginAtZero: false, grid: { display: false }},
+                },
+                animation: false
+            }
+        };
+    }
+
+    // ======================= NHIỆT ĐỘ =======================
+    const ctxTemp = document.getElementById('temp-chart').getContext('2d');
+    const tempChart = new Chart(ctxTemp, createChartConfig('Nhiệt độ (°C)', 'rgb(231, 76, 60)'));
+
+    onValue(tempRef, snapshot => {
+        const data = snapshot.val();
+        nhietDoElement.innerText = (data ?? "--") + "°C";
+
+        if (data !== null) {
+            const t = new Date().toLocaleTimeString();
+            tempChart.data.labels.push(t);
+            tempChart.data.datasets[0].data.push(data);
+
+            if (tempChart.data.labels.length > 20) {
+                tempChart.data.labels.shift();
+                tempChart.data.datasets[0].data.shift();
+            }
+            tempChart.update('none');
+        }
+    });
+
+    // ======================= HƠI NƯỚC / ĐỘ ẨM =======================
+    const ctxHum = document.getElementById('humidity-chart').getContext('2d');
+    const humChart = new Chart(ctxHum, createChartConfig('Độ ẩm (%)', 'rgb(54,162,235)'));
+
+    onValue(humRef, snapshot => {
+        const data = snapshot.val();
+        doAmElement.innerText = (data ?? "--") + "%";
+
+        if (data !== null) {
+            const t = new Date().toLocaleTimeString();
+            humChart.data.labels.push(t);
+            humChart.data.datasets[0].data.push(data);
+
+            if (humChart.data.labels.length > 20) {
+                humChart.data.labels.shift();
+                humChart.data.datasets[0].data.shift();
+            }
+            humChart.update('none');
+        }
+    });
+
+    // ======================= ĐỘ ẨM ĐẤT =======================
+    const ctxSoil = document.getElementById('soil-chart').getContext('2d');
+    const soilChart = new Chart(ctxSoil, createChartConfig('Độ ẩm đất (%)', 'rgb(0,128,0)'));
+
+    onValue(soilRef, snapshot => {
+        const data = snapshot.val();
+        soilElement.innerText = (data ?? "--") + "%";
+
+        if (data !== null) {
+            const t = new Date().toLocaleTimeString();
+            soilChart.data.labels.push(t);
+            soilChart.data.datasets[0].data.push(data);
+
+            if (soilChart.data.labels.length > 20) {
+                soilChart.data.labels.shift();
+                soilChart.data.datasets[0].data.shift();
+            }
+            soilChart.update('none');
+        }
+    });
+
+    // ======================= ÁNH SÁNG =======================
+    const ctxLight = document.getElementById('light-chart').getContext('2d');
+    const lightChart = new Chart(ctxLight, createChartConfig('Ánh sáng (lux)', 'rgb(255,206,86)'));
+
+    onValue(lightRef, snapshot => {
+        const data = snapshot.val();
+        lightElement.innerText = (data ?? "--") + " lux";
+
+        if (data !== null) {
+            const t = new Date().toLocaleTimeString();
+            lightChart.data.labels.push(t);
+            lightChart.data.datasets[0].data.push(data);
+
+            if (lightChart.data.labels.length > 20) {
+                lightChart.data.labels.shift();
+                lightChart.data.datasets[0].data.shift();
+            }
+            lightChart.update('none');
+        }
+    });
+
+
+    
     // ==================== SPA PAGE SWITCH ====================
     window.showPage = function(pageId){
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -64,8 +214,8 @@ document.addEventListener("DOMContentLoaded", () => {  // Đảm bảo HTML load
                 } else {
                     fanVideo.hidden = true;      // Ẩn video
                     fanImage.hidden = false;       // Hiện ảnh OFF
-    }
-}
+                }
+            }
             // -------- PUMP EFFECT (đổi ảnh) --------
             if(pumpImage){
                 pumpImage.src = state === "ON" ? "./image/van_on.png"
@@ -133,6 +283,10 @@ document.addEventListener("DOMContentLoaded", () => {  // Đảm bảo HTML load
         lightImageId:"light-img-id",
     });
 
+
+
     // FOOTER YEAR
     document.getElementById("year").textContent = new Date().getFullYear();
 });
+
+

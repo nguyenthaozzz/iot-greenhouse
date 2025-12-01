@@ -368,26 +368,16 @@ position: absolute;
 /* =====================================================================
    BIỂU ĐỒ (CHART)
    ===================================================================== */
-.time-range {
-    margin: 10px 0;
-}
-
-.rangeSelect {
-    padding: 6px 10px;
-    border-radius: 6px;
-}
-
 /* Khung biểu đồ */
 canvas {
-    width: 100% !important;
-    max-height: 350px;
+    height: 100% !important;
+    max-height: 510px;
     margin-top: 10px;
-    background: white;
+    background: rgb(252, 252, 252);
     padding: 10px;
     border-radius: 12px;
     box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
 }
-
 
 /* =====================================================================
    PAGE: SOIL MOISTURE
