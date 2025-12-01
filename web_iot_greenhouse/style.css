@@ -447,4 +447,39 @@ canvas {
     display: block;
 }
 
+/* soil bar */
+.soil-bar-container {
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0 5px 0;
+    position: relative;
 
+    background: linear-gradient(to right,
+        #c24b1a, 
+        #b57d63,
+        #8ca3a6,
+        #7dc6e3,
+        #5bb4d1,
+        #0f3147
+    );
+}
+
+#soil-bar-fill {
+    height: 100%;
+    width: 100%;     
+    background-color: #ddd; 
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: width 0.4s ease;
+}
+
+.soil-bar-labels,
+.soil-text-zone {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
