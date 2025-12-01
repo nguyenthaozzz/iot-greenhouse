@@ -30,12 +30,39 @@ body {
    ===================================================================== */
 .topbar {
     grid-area: header;
-    background: #009900;
-    color: rgb(255, 255, 255);
+    
+    /* --- BẮT ĐẦU PHẦN CHỈNH SỬA --- */
+    
+    /* Xóa màu nền tĩnh cũ (background: #009900;) thay bằng Gradient */
+    background: linear-gradient(-45deg, #009900, #23d5ab, #0077be, #009900);
+    
+    /* Phóng to nền lên 400% để có chỗ cho hiệu ứng di chuyển */
+    background-size: 400% 400%;
+    
+    /* Gọi Animation: tên là gradientBG, chạy trong 10s, lặp vô hạn */
+    animation: gradientBG 10s ease infinite;
+    
+    /* --- KẾT THÚC PHẦN CHỈNH SỬA --- */
+
+    color: white;
     padding: 10px 20px;
     display: flex;
-    align-items: center;         /* Căn giữa theo chiều dọc */
-    justify-content: space-between;  /* Tách title và logo */
+    align-items: center;         
+    justify-content: space-between;
+}
+/* =====================================================================
+   ANIMATION: Hiệu ứng chuyển màu Gradient cho Topbar
+   ===================================================================== */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 #clock {
     font-size: 20px;
