@@ -5,14 +5,14 @@
 
     // ======================= FIREBASE CONFIG =======================
     const firebaseConfig = {
-        apiKey: "AIzaSyBr7tBAHwXaGBL0ceLK9c1UDSdYRq_cuZs",
-        authDomain: "project-greenhouse-5970e.firebaseapp.com",
-        databaseURL: "https://project-greenhouse-5970e-default-rtdb.firebaseio.com",
-        projectId: "project-greenhouse-5970e",
-        storageBucket: "project-greenhouse-5970e.firebasestorage.app",
-        messagingSenderId: "476065711518",
-        appId: "1:476065711518:web:fb1e3df380f3b24cfac28f",
-        measurementId: "G-4YTZQB881G"
+        apiKey: "AIzaSyC_5zwHVBSGlafgtSerW6DWQ5_MoocACRo",
+        authDomain: "iot-green-house-ebeaf.firebaseapp.com",
+        databaseURL: "https://iot-green-house-ebeaf-default-rtdb.firebaseio.com",
+        projectId: "iot-green-house-ebeaf",
+        storageBucket: "iot-green-house-ebeaf.firebasestorage.app",
+        messagingSenderId: "472750644936",
+        appId: "1:472750644936:web:c402395617eb24e3f7cffd",
+        measurementId: "G-VWSXQ37WJG"
     };
 
     const app = initializeApp(firebaseConfig);
