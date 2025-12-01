@@ -23,8 +23,7 @@
         <ul>
             <li><a href="#" onclick="showPage('page-home')" title="Trang chính">Home</a></li>
             <li><a href="#" onclick="showPage('page-soil')" title="Biểu đồ Độ ẩm đất">Soil Moisture</a></li>
-            <li><a href="#" onclick="showPage('page-temp')" title="Biểu đồ Nhiệt độ">Temperature</a></li>
-            <li><a href="#" onclick="showPage('page-humidity')" title="Biểu đồ Độ ẩm">Humidity</a></li>
+            <li><a href="#" onclick="showPage('page-temp')" title="Biểu đồ Nhiệt độ">Temperature & Humidity</a></li>
             <li><a href="#" onclick="showPage('page-light')" title="Biểu đồ Ánh sáng">Light</a></li>
         </ul>
     </aside>
@@ -131,14 +130,32 @@
                     <button id="pump-spa" class="chip">Máy bơm nước</button>
                 </div>
             </div>
+            <!-- Gradient Bar Soil Moisture -->
+            <div class="soil-bar-container">
+                <div id="soil-bar-fill"></div>
+            </div>
+
+            <div class="soil-bar-labels">
+                <span>0%</span>
+                <span>20%</span>
+                <span>40%</span>
+                <span>60%</span>
+                <span>80%</span>
+                <span>100%</span>
+            </div>
+
+            <div class="soil-text-zone">
+                <span>Quá khô</span>
+                <span>Quá ẩm</span>
+            </div>
 
             <canvas id="soil-chart"></canvas>
         </div>
 
-        <!-- ================= TEMP PAGE ================= -->
+        <!-- ================= TEMP and HUM PAGE ================= -->
         <div id="page-temp" class="page">
             <div class="page-header">
-                <h2>Temperature Chart</h2>
+                <h2>Temperature and Humidity Chart</h2>
 
                 <div class="acc-item">
                     <span id="temp-dot-spa" class="dot offline"></span>
@@ -149,13 +166,6 @@
             <canvas id="temp-chart"></canvas>
         </div>
 
-        <!-- ================= HUMIDITY PAGE ================= -->
-        <div id="page-humidity" class="page">
-            <div class="page-header">
-                <h2>Humidity Chart</h2>
-            </div>
-            <canvas id="humidity-chart"></canvas>
-        </div>
 
         <!-- ================= LIGHT PAGE ================= -->
         <div id="page-light" class="page">
