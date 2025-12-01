@@ -34,6 +34,23 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {  // Đảm bảo HTML load xong mới chạy JS
+    
+    // ==================== DIGITAL CLOCK ====================
+    function updateClock() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+    document.getElementById("clock").textContent = timeString;
+    }
+
+    // cập nhật mỗi giây
+    setInterval(updateClock, 1000);
+    updateClock(); // chạy ngay khi mở trang
+
+
 
    // ================================================================
         // PHẦN 2: CẤU HÌNH BIỂU ĐỒ (CHART.JS)
