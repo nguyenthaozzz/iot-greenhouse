@@ -1,368 +1,301 @@
-  // ======================= FIREBASE IMPORT =======================
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+// ======================= FIREBASE IMPORT =======================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-    // ======================= FIREBASE CONFIG =======================
-    const firebaseConfig = {
-        apiKey: "AIzaSyC_5zwHVBSGlafgtSerW6DWQ5_MoocACRo",
-        authDomain: "iot-green-house-ebeaf.firebaseapp.com",
-        databaseURL: "https://iot-green-house-ebeaf-default-rtdb.firebaseio.com",
-        projectId: "iot-green-house-ebeaf",
-        storageBucket: "iot-green-house-ebeaf.firebasestorage.app",
-        messagingSenderId: "472750644936",
-        appId: "1:472750644936:web:c402395617eb24e3f7cffd",
-        measurementId: "G-VWSXQ37WJG"
-    };
+// ======================= FIREBASE CONFIG =======================
+const firebaseConfig = {
+    apiKey: "AIzaSyC_5zwHVBSGlafgtSerW6DWQ5_MoocACRo",
+    authDomain: "iot-green-house-ebeaf.firebaseapp.com",
+    databaseURL: "https://iot-green-house-ebeaf-default-rtdb.firebaseio.com",
+    projectId: "iot-green-house-ebeaf",
+    storageBucket: "iot-green-house-ebeaf.firebasestorage.app",
+    messagingSenderId: "472750644936",
+    appId: "1:472750644936:web:c402395617eb24e3f7cffd",
+    measurementId: "G-VWSXQ37WJG"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const database = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
 
-    // ======================= DOM ELEMENTS =======================
-    const nhietDoElement = document.getElementById('temperature');
-    const doAmElement = document.getElementById('humidity');
-    const soilElement = document.getElementById('soil');
-    const lightElement = document.getElementById('light');
+// ======================= DOM ELEMENTS =======================
+const nhietDoElement = document.getElementById('temperature');
+const doAmElement = document.getElementById('humidity');
+const soilElement = document.getElementById('soil');
+const lightElement = document.getElementById('light');
 
-    // ======================= FIREBASE REFERENCE =======================
-    const tempRef = ref(database, 'Green_house/temp');
-    const humRef  = ref(database, 'Green_house/hum');
-    const soilRef = ref(database, 'Green_house/soil_hum');
-    const lightRef= ref(database, 'Green_house/light');
+// ======================= FIREBASE REFERENCE =======================
+const tempRef = ref(database, 'Green_house/temp');
+const humRef = ref(database, 'Green_house/hum');
+const soilRef = ref(database, 'Green_house/soil_hum');
+const lightRef = ref(database, 'Green_house/light');
 
+// SWITCH DEVICE
+const pumpSwitchRef = ref(database, 'Green_house/pump_switch');
+const fanSwitchRef = ref(database, 'Green_house/fan_switch');
+const lightSwitchRef = ref(database, 'Green_house/light_switch');
 
+document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("DOMContentLoaded", () => {  // Đảm bảo HTML load xong mới chạy JS
-    
     // ==================== DIGITAL CLOCK ====================
     function updateClock() {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString("vi-VN", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-    });
-    document.getElementById("clock").textContent = timeString;
+        const now = new Date();
+        document.getElementById("clock").textContent = now.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
     }
-
-    // cập nhật mỗi giây
     setInterval(updateClock, 1000);
-    updateClock(); // chạy ngay khi mở trang
+    updateClock();
 
-
-
-   // ================================================================
-        // PHẦN 2: CẤU HÌNH BIỂU ĐỒ (CHART.JS)
-        // ================================================================
-        // Hàm tạo cấu hình biểu đồ nhanh để đỡ phải viết lại nhiều lần
-        function createChartConfig(label, color) {
-            return {
-                type: 'line',
-                data: {
-                    labels: [], // Thời gian
-                    datasets: [{
-                        label: label,
-                        data: [], // Giá trị
-                        borderColor: color,
-                        backgroundColor: color.replace(')', ', 0.2)').replace('rgb', 'rgba'), // Tạo màu nền mờ
-                        borderWidth: 2,
-                        tension: 0.4, // Đường cong mềm mại
-                        fill: true,
-                        pointRadius: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // Để biểu đồ co giãn tốt hơn
-                    scales: {
-                        x: { title: { display: true, text: 'Thời gian' },
-                             grid: {
-                                display: true //tắt lưới dọc
-                             }        
-                    },
-                        y: { beginAtZero: false ,
-                            grid: {
-                                display: true //tắt lưới ngang
-                             }
-                    },
-                    animation: false // Tắt animation để realtime mượt hơn
-                }
-            }
-        };
-        }
-        // ================= BIỂU ĐỒ NHIỆT ĐỘ - ĐỘ ẨM =================
-        const ctxHumTemp = document.getElementById('temp-chart').getContext('2d');
-        const HumTempchart = new Chart(ctxHumTemp, {
+    // ==================== CHART CONFIG ====================
+    function createChartConfig(label, color) {
+        return {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Nhiệt độ (°C)',
+                    label: label,
                     data: [],
-                    borderColor: 'rgba(231, 76, 60)',
-                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                    borderColor: color,
+                    backgroundColor: color.replace("rgb", "rgba").replace(")", ",0.2)"),
                     borderWidth: 2,
-                    yAxisID: 'y1',
                     tension: 0.4,
-                    fill: false, // Không tô màu dưới đường biểu diễn
-                    pointRadius: 3 // Điểm tròn trên đường biểu diễn
-                }, {
-                    label: 'Độ ẩm (%)',
-                    data: [],
-                    borderColor: 'rgba(54, 162, 235)',
-                    //backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderWidth: 2,
-                    yAxisID: 'y2',
-                    tension: 0.4,
-                    fill: false, // Không tô màu dưới đường biểu diễn
-                    pointRadius: 3 // Điểm tròn trên đường biểu diễn
+                    fill: true,
+                    pointRadius: 3
                 }]
             },
             options: {
-                responsive: true, // Đảm bảo biểu đồ co giãn theo kích thuoc
-                maintainAspectRatio: false, // Không giữ tỉ lệ cố định
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
                 scales: {
-                    x: {title: {display: true, text: 'Thời gian'},
-                        grid: {display: true} // Ẩn lưới ngang}
-                        },
-                    y1: { beginAtzero: false,
-                        title: {display: true,
-                                text: 'Nhiệt độ (°C)'},
-                        position: 'left',
-                        grid: {display: false} // Ẩn lưới dọc
-                        },
-                    y2: { beginAtzero: false,
-                        title: {display: true,
-                                text: 'Độ ẩm (%)'},
-                        position: 'right',
-                        grid: {display: true} 
+                    x: {
+                        title: { display: true, text: "Thời gian" },
+                        grid: { display: true }
+                    },
+                    y: {
+                        beginAtZero: false,
+                        grid: { display: true }
                     }
-                    }
+                }
             }
-        });
-        let lasttemp =null;
-        let lasthum =null;
-        function update_combo_chart () {
-            const now = new Date().toLocaleTimeString('vi-VN');
-            HumTempchart.data.labels.push(now);
-            HumTempchart.data.datasets[0].data.push(lasttemp);
-            HumTempchart.data.datasets[1].data.push(lasthum);
-            // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ
-            if (HumTempchart.data.labels.length > 20) {
-                HumTempchart.data.labels.shift();
-                HumTempchart.data.datasets[0].data.shift();
-                HumTempchart.data.datasets[1].data.shift();
+        };
+    }
+
+    // ================= BIỂU ĐỒ NHIỆT ĐỘ – ĐỘ ẨM =================
+    const ctxHumTemp = document.getElementById('temp-chart').getContext('2d');
+    const HumTempchart = new Chart(ctxHumTemp, {
+        type: 'line',
+        data: { labels: [], datasets: [
+            { label: "Nhiệt độ (°C)", data: [], borderColor: "red", borderWidth: 2, yAxisID: "y1", fill: false },
+            { label: "Độ ẩm (%)", data: [], borderColor: "blue", borderWidth: 2, yAxisID: "y2", fill: false }
+        ]},
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: "Thời gian" } },
+                y1: { position: "left", grid: { display: false } },
+                y2: { position: "right", grid: { display: true } }
             }
-            HumTempchart.update('none'); // Cập nhật biểu đồ mà không có animation
         }
-        // 6. Lắng nghe dữ liệu thay đổi (Realtime)
-        
-        // Nhiệt độ
-        //const ctxTemp = document.getElementById('temp-chart').getContext('2d');
-        //const tempChart = new Chart(ctxTemp, createChartConfig('Nhiệt độ (°C)', 'rgb(231, 76, 60)')); // Màu đỏ
-        onValue(tempRef, (snapshot) => {
-            const data = snapshot.val();
-            // Kiểm tra nếu có dữ liệu thì hiển thị, không thì hiện --
-            nhietDoElement.innerText = (data !== null ? data : "--") + "°C";
-            if (data !== null) {
-                lasttemp = data;
-                update_combo_chart();
-            }
-        });
+    });
 
-        // Độ ẩm không khí
-        //const ctxHum = document.getElementById('humidity-chart').getContext('2d');
-        //const humChart = new Chart(ctxHum, createChartConfig('Độ ẩm (%)', 'rgb(54, 162, 235)')); // Màu xanh dương
-        onValue(humRef, (snapshot) => {
-            const data = snapshot.val();
-            doAmElement.innerText = (data !== null ? data : "--") + "%";
-            if (data !== null) {
-                lasthum = data;
-                update_combo_chart();
-            }
-        });
+    let lasttemp = null;
+    let lasthum = null;
 
-        // Độ ẩm đất
-        const ctxSoil = document.getElementById('soil-chart').getContext('2d');
-        const soilChart = new Chart(ctxSoil, createChartConfig('Độ ẩm đất (%)', 'rgb(0, 128, 0)')); // Màu xanh lá
-        onValue(soilRef, (snapshot) => {
-            const data = snapshot.val();
-            soilElement.innerText = (data !== null ? data : "--") + "%";
-            if (data !== null) {
-                document.getElementById("soil-bar-fill").style.width = (100 - data) + "%"; 
-                const currentTime = new Date().toLocaleTimeString();
-                // Cập nhật biểu đồ
-                soilChart.data.labels.push(currentTime);
-                soilChart.data.datasets[0].data.push(data);
-                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
-                if (soilChart.data.labels.length > 20) {
-                    soilChart.data.labels.shift();
-                    soilChart.data.datasets[0].data.shift();
-                    }
-                soilChart.update('none'); // Cập nhật biểu đồ mà không có animation
-            }
-        });
+    function update_combo_chart() {
+        const now = new Date().toLocaleTimeString('vi-VN');
+        HumTempchart.data.labels.push(now);
+        HumTempchart.data.datasets[0].data.push(lasttemp);
+        HumTempchart.data.datasets[1].data.push(lasthum);
 
-        // Ánh sáng
-        const ctxLight = document.getElementById('light-chart').getContext('2d');
-        const lightChart = new Chart(ctxLight, createChartConfig('Cường độ ánh sáng (lux)', 'rgb(255, 206, 86)')); // Màu vàng
-        onValue(lightRef, (snapshot) => {
-            const data = snapshot.val();
-            lightElement.innerText = (data !== null ? data : "--") + " lux";
-            if (data !== null) {
-                const currentTime = new Date().toLocaleTimeString();
-                // Cập nhật biểu đồ
-                lightChart.data.labels.push(currentTime);
-                lightChart.data.datasets[0].data.push(data);
-                // Giới hạn số điểm dữ liệu hiển thị trên biểu đồ 
-                if (lightChart.data.labels.length > 20) {
-                    lightChart.data.labels.shift();
-                    lightChart.data.datasets[0].data.shift();
-                    }
-                lightChart.update('none'); // Cập nhật biểu đồ mà không có animation
-            }
-        });
+        if (HumTempchart.data.labels.length > 20) {
+            HumTempchart.data.labels.shift();
+            HumTempchart.data.datasets[0].data.shift();
+            HumTempchart.data.datasets[1].data.shift();
+        }
+        HumTempchart.update("none");
+    }
 
+    onValue(tempRef, (snap) => {
+        const v = snap.val();
+        nhietDoElement.innerText = v + "°C";
+        lasttemp = v;
+        update_combo_chart();
+    });
 
-    
+    onValue(humRef, (snap) => {
+        const v = snap.val();
+        doAmElement.innerText = v + "%";
+        lasthum = v;
+        update_combo_chart();
+    });
+
+    // ================= BIỂU ĐỒ SOIL =================
+    const soilChart = new Chart(document.getElementById('soil-chart').getContext('2d'),
+        createChartConfig("Độ ẩm đất (%)", "rgb(0,128,0)")
+    );
+
+    onValue(soilRef, (snap) => {
+        const v = snap.val();
+        soilElement.innerText = v + "%";
+        document.getElementById("soil-bar-fill").style.width = (100 - v) + "%";
+
+        const t = new Date().toLocaleTimeString();
+        soilChart.data.labels.push(t);
+        soilChart.data.datasets[0].data.push(v);
+
+        if (soilChart.data.labels.length > 20) {
+            soilChart.data.labels.shift();
+            soilChart.data.datasets[0].data.shift();
+        }
+        soilChart.update("none");
+    });
+
+    // ================= LIGHT CHART =================
+    const lightChart = new Chart(document.getElementById('light-chart').getContext('2d'),
+        createChartConfig("Cường độ ánh sáng (lux)", "rgb(255,206,86)")
+    );
+
+    onValue(lightRef, (snap) => {
+        const v = snap.val();
+        lightElement.innerText = v + " lux";
+
+        const t = new Date().toLocaleTimeString();
+        lightChart.data.labels.push(t);
+        lightChart.data.datasets[0].data.push(v);
+
+        if (lightChart.data.labels.length > 20) {
+            lightChart.data.labels.shift();
+            lightChart.data.datasets[0].data.shift();
+        }
+        lightChart.update("none");
+    });
+
     // ==================== SPA PAGE SWITCH ====================
-    window.showPage = function(pageId){
+    window.showPage = function (id) {
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-        document.getElementById(pageId).classList.add("active");
+        document.getElementById(id).classList.add("active");
     };
 
-    // ==================== BIND FUNCTION (CHUNG CHO 3 THIẾT BỊ) ====================
-    function bindToggle(set){
-
+    // ==================== BIND TOGGLE FUNCTION ====================
+    function bindToggle(cfg) {
         const {
             homeDot, homeText, homeBtn,
             spaDot, spaText, spaBtn,
-            lightImageId = null,
-            fanVideoId = null,
-            fanImageId = null,
-            pumpImageId = null,
-            pumpImageId2 = null
-        } = set;
+            lightImageId, fanVideoId, fanImageId,
+            pumpImageId, pumpImageId2,
+            switchRef
+        } = cfg;
 
-        // HOME
         const hDot = document.getElementById(homeDot);
         const hTxt = document.getElementById(homeText);
         const hBtn = document.getElementById(homeBtn);
 
-        // SPA
         const sDot = document.getElementById(spaDot);
         const sTxt = document.getElementById(spaText);
         const sBtn = document.getElementById(spaBtn);
 
-        // SPECIAL EFFECTS
-        const lightImage = lightImageId ? document.getElementById(lightImageId) : null;
+        const lightImg = lightImageId ? document.getElementById(lightImageId) : null;
+        const fanVid = fanVideoId ? document.getElementById(fanVideoId) : null;
+        const fanImg = fanImageId ? document.getElementById(fanImageId) : null;
+        const pumpImg = pumpImageId ? document.getElementById(pumpImageId) : null;
+        const pumpImg2 = pumpImageId2 ? document.getElementById(pumpImageId2) : null;
 
-        const fanVideo = fanVideoId ? document.getElementById(fanVideoId) : null;
+        // Update UI
+        function updateUI(state) {
+            hTxt.innerText = state;
+            sTxt.innerText = state;
 
-        const fanImage = fanImageId ? document.getElementById(fanImageId) : null;
+            hDot.className = "dot " + (state === "ON" ? "online" : "offline");
+            sDot.className = "dot " + (state === "ON" ? "online" : "offline");
 
-        const pumpImage = pumpImageId ? document.getElementById(pumpImageId) : null;
-        const pumpImage2 = pumpImageId2 ? document.getElementById(pumpImageId2) : null;
+            if (lightImg)
+                lightImg.src = state === "ON" ? "./image/light_on.png" : "./image/light_off.png";
 
-        // ================= UPDATE UI =================
-        function updateUI(state){
-
-            // Update HOME
-            hTxt.textContent = state;
-            hDot.className = `dot ${state === "ON" ? "online" : "offline"}`;
-
-            // Update SPA
-            sTxt.textContent = state;
-            sDot.className = `dot ${state === "ON" ? "online" : "offline"}`;
-
-            // -------- LIGHT EFFECT (đổi ảnh) --------
-            if(lightImage)
-                lightImage.src = state === "ON" ? "./image/light_on.png"
-                                               : "./image/light_off.png";
-
-
-            // -------- FAN EFFECT (video quạt) --------
-           if (fanVideo && fanImage) {
+            if (fanVid && fanImg) {
                 if (state === "ON") {
-                    fanImage.hidden = true;        // Ẩn ảnh OFF
-                    fanVideo.hidden = false;     // Hiện video ON
+                    fanVid.hidden = false;
+                    fanImg.hidden = true;
                 } else {
-                    fanVideo.hidden = true;      // Ẩn video
-                    fanImage.hidden = false;       // Hiện ảnh OFF
+                    fanVid.hidden = true;
+                    fanImg.hidden = false;
                 }
             }
-            // -------- PUMP EFFECT (đổi ảnh) --------
-            if(pumpImage){
-                pumpImage.src = state === "ON" ? "./image/van_on.png"
-                                               : "./image/van_off.png";
-                pumpImage2.src = state === "ON" ? "./image/van_on.png"
-                                               : "./image/van_off.png";
-                   
+
+            if (pumpImg) {
+                const src = state === "ON" ? "./image/van_on.png" : "./image/van_off.png";
+                pumpImg.src = src;
+                pumpImg2.src = src;
             }
         }
 
-        // ================= TOGGLE =================
-        function toggle(isHome){
-            const currentState = isHome ? hTxt.textContent : sTxt.textContent;
-            const newState = currentState === "OFF" ? "ON" : "OFF";
-            updateUI(newState);
-        }
+        // Lắng nghe Firebase
+        onValue(switchRef, (snap) => {
+            const state = snap.val() || "OFF";
+            updateUI(state);
+        });
 
-        // Click HOME
-        hBtn.addEventListener("click", () => toggle(true));
+        // Xử lý nút
+        const clickHandler = () => {
+            const current = hTxt.innerText;
+            const newState = current === "ON" ? "OFF" : "ON";
+            set(switchRef, newState);
+        };
 
-        // Click SPA
-        sBtn.addEventListener("click", () => toggle(false));
+        hBtn.addEventListener("click", clickHandler);
+        sBtn.addEventListener("click", clickHandler);
     }
 
-    // ==================== BIND DEVICES ====================
-
-    // -------- PUMP --------
+    // ==================== BIND 3 THIẾT BỊ ====================
     bindToggle({
-        homeDot: "soil-dot-home",
-        homeText: "soil-text-home",
-        homeBtn: "pump-home",
-
-        spaDot: "soil-dot-spa",
-        spaText: "soil-text-spa",
-        spaBtn: "pump-spa",
-
-        pumpImageId:  "pump-img-id",
-        pumpImageId2: "pump-img-id2"
+        homeDot: "soil-dot-home", homeText: "soil-text-home", homeBtn: "pump-home",
+        spaDot: "soil-dot-spa", spaText: "soil-text-spa", spaBtn: "pump-spa",
+        pumpImageId: "pump-img-id", pumpImageId2: "pump-img-id2",
+        switchRef: pumpSwitchRef
     });
 
-    // -------- FAN --------
     bindToggle({
-        homeDot:"temp-dot-home",
-        homeText:"temp-text-home",
-        homeBtn:"fan-home",
-
-        spaDot:"temp-dot-spa",
-        spaText:"temp-text-spa",
-        spaBtn:"fan-spa",
-
-        fanVideoId:"fan-video-id",
-        fanImageId:"fan-img-id"
+        homeDot: "temp-dot-home", homeText: "temp-text-home", homeBtn: "fan-home",
+        spaDot: "temp-dot-spa", spaText: "temp-text-spa", spaBtn: "fan-spa",
+        fanVideoId: "fan-video-id", fanImageId: "fan-img-id",
+        switchRef: fanSwitchRef
     });
 
-    // -------- LIGHT --------
     bindToggle({
-        homeDot:"light-dot-home",
-        homeText:"light-text-home",
-        homeBtn:"light-home",
-
-        spaDot:"light-dot-spa",
-        spaText:"light-text-spa",
-        spaBtn:"light-spa",
-
-        lightImageId:"light-img-id",
+        homeDot: "light-dot-home", homeText: "light-text-home", homeBtn: "light-home",
+        spaDot: "light-dot-spa", spaText: "light-text-spa", spaBtn: "light-spa",
+        lightImageId: "light-img-id",
+        switchRef: lightSwitchRef
     });
 
+    // ==================== MOBILE MENU (ĐÃ FIX) ====================
+    const menuToggleButton = document.getElementById("menu-toggle");
+    const sidebarElem = document.querySelector(".sidebar");
+    const overlayElem = document.getElementById("overlay");
 
+    if (menuToggleButton && sidebarElem && overlayElem) {
 
-    // FOOTER YEAR
+        menuToggleButton.addEventListener("click", () => {
+            sidebarElem.classList.toggle("open");
+            overlayElem.classList.toggle("active");
+        });
+
+        overlayElem.addEventListener("click", () => {
+            sidebarElem.classList.remove("open");
+            overlayElem.classList.remove("active");
+        });
+
+        document.querySelectorAll(".sidebar a").forEach(link => {
+            link.addEventListener("click", () => {
+                sidebarElem.classList.remove("open");
+                overlayElem.classList.remove("active");
+            });
+        });
+    }
+
     document.getElementById("year").textContent = new Date().getFullYear();
 });
-
-

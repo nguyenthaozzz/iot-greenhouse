@@ -24,15 +24,15 @@ body {
     font-family: Arial, sans-serif;
 }
 
+#title-header {
+    font-size: 30px;
+}
 
 /* =====================================================================
    HEADER – Thanh topbar
    ===================================================================== */
 .topbar {
     grid-area: header;
-    
-    /* --- BẮT ĐẦU PHẦN CHỈNH SỬA --- */
-    
     /* Xóa màu nền tĩnh cũ (background: #009900;) thay bằng Gradient */
     background: linear-gradient(-45deg, #009900, #23d5ab, #0077be, #009900);
     
@@ -41,8 +41,6 @@ body {
     
     /* Gọi Animation: tên là gradientBG, chạy trong 10s, lặp vô hạn */
     animation: gradientBG 10s ease infinite;
-    
-    /* --- KẾT THÚC PHẦN CHỈNH SỬA --- */
 
     color: white;
     padding: 10px 20px;
@@ -275,7 +273,7 @@ body {
 
 /* 1. QUẠT (Video và Ảnh) */
 .fan-video {
-position: absolute;
+    position: absolute;
     width: 10%;
     top: 2%;
     left: 88.5%;
@@ -345,8 +343,6 @@ position: absolute;
 }
 
 /* Soil moisture bar */
-
-/* 1. Khung chứa: Giờ sẽ chứa dải màu Gradient cố định */
 .soil-bar-container {
     width: 100%;
     height: 35px;
@@ -443,7 +439,6 @@ position: absolute;
     display: inline-block;
 }
 
-
 .chip:hover {
     background: #007700;
 }
@@ -508,7 +503,6 @@ canvas {
 /* =====================================================================
    PAGE: LIGHT
    ===================================================================== */
-
 .light-indicator {
     display: flex;
     align-items: center;
@@ -564,4 +558,89 @@ canvas {
     justify-content: space-between;
     font-size: 14px;
     margin-bottom: 10px;
+}
+
+/* =====================================================================
+   MOBILE RESPONSIVE STYLES
+   ===================================================================== */
+#menu-toggle {
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+#menu-toggle:focus {
+    outline: none;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+.overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 0 1fr;
+        grid-template-rows: 70px 1fr 60px;
+        grid-template-areas:
+            "header header"
+            "main main"
+            "footer footer";
+    }
+    .topbar {
+        justify-content: flex-start;
+    }
+    #title-header {
+        margin-left: 10px;
+    }
+    #clock {
+        margin-left: auto;
+    }
+    #menu-toggle {
+        display: block;
+    }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 240px;
+        height: 100%;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .model-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    .acculator-homepage {
+        width: 100%;
+        align-items: center;
+    }
+    .card {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+@media (max-width: 480px) {
+    .card {
+        grid-template-columns: 1fr;
+    }
 }
