@@ -46,7 +46,7 @@ A Python **`bridge.py`** then syncs data **bidirectionally** between MQTT and Fi
 ---
 
 ## ⚙️ System Architecture
-Layered Architecture DiagraSystem Specification Diagram
+System Specification Diagram
 <img width="1004" height="468" alt="image" src="https://github.com/user-attachments/assets/3fa9188b-9b1d-4187-8919-ce325cf9135c" />
 
 Block Diagram
