@@ -5,11 +5,13 @@
 [![ESP32](https://img.shields.io/badge/ESP32-Simulated-blue?style=for-the-badge&logo=espressif&logoColor=white)](https://www.espressif.com/)
 [![MQTT](https://img.shields.io/badge/MQTT-Mosquitto-purple?style=for-the-badge&logo=eclipsemosquitto&logoColor=white)](https://mosquitto.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-Realtime_DB-orange?style=for-the-badge&logo=firebase&logoColor=white)](https://firebase.google.com/)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Android](https://img.shields.io/badge/Android-APK-green?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com/)
 
-> An end-to-end IoT system for real-time greenhouse environment monitoring and automated control — built with MQTT, Firebase, and a browser-based sensor simulator.
+> Real-time IoT greenhouse system using MQTT, Firebase & ESP32 simulation. Bidirectional Python bridge syncs sensor data to cloud; web dashboard + Android APK for remote monitoring and actuator control.
 
-[📺 Demo](#demo) · [⚙️ Architecture](#architecture) · [🚀 Getting Started](#getting-started) · [📊 Features](#features)
+[⚙️ Architecture](#️-system-architecture) · [🧪 Simulators](#-simulation-strategy) · [🚀 Getting Started](#-getting-started) · [🛠️ Tech Stack](#️-tech-stack)
 
 </div>
 
@@ -17,9 +19,13 @@
 
 ## 📌 Overview
 
-Modern agriculture demands precision. This project delivers a complete **IoT greenhouse management system** that monitors critical environmental parameters and automates actuator control — all accessible from a web dashboard in real time.
+Modern agriculture demands precision. This project delivers a complete **IoT greenhouse management system** that monitors critical environmental parameters and automates actuator control — all accessible from a web dashboard and mobile app in real time.
 
-Rather than relying on physical hardware during development, the system includes a **browser-based sensor simulator** (`simulator.htm`) that mimics ESP32 + sensor behavior, publishing realistic MQTT data streams identical to production deployment. This enables full end-to-end testing of the data pipeline without physical hardware.
+Rather than relying on physical hardware, the system ships with **two interchangeable simulators**:
+- **`mqtt_simutlation.py`** — Python CLI simulator, publishes sensor data every 3 seconds
+- **`simulator.htm`** — browser-based MQTT publisher, no terminal needed
+
+A Python **`bridge.py`** then syncs data **bidirectionally** between MQTT and Firebase Realtime Database, while the web dashboard and Android APK provide live monitoring and remote control.
 
 ---
 
@@ -27,45 +33,115 @@ Rather than relying on physical hardware during development, the system includes
 
 | Feature | Description |
 |---|---|
-| 📡 **Real-time Monitoring** | Live data updates via MQTT WebSocket — no polling, no delays |
-| 🌡️ **Multi-sensor Support** | Temperature, humidity, soil moisture, and light intensity |
-| 🤖 **Automated Control** | Rule-based triggers for fan, water pump, and grow lights |
-| 🕹️ **Remote Control** | Manual override of actuators via web dashboard |
-| 📈 **Data Visualization** | Interactive historical charts with time-series rendering |
+| 📡 **Real-time Monitoring** | Live sensor data pushed via MQTT — sub-second latency, no polling |
+| 🌡️ **Multi-sensor Support** | Temperature, air humidity, soil moisture, light intensity |
+| 🤖 **Automated Control** | Rule-based actuator triggers for fan, water pump, grow light |
+| 🕹️ **Remote Control** | Manual override of devices via web dashboard |
+| 📈 **Data Visualization** | Interactive time-series charts for historical analysis |
 | 💾 **Cloud Storage** | Persistent logging to Firebase Realtime Database |
-| 🧪 **Hardware Simulator** | `simulator.htm` — full MQTT publisher, no ESP32 required |
-| 📶 **LAN Deployment** | Lightweight, self-hosted — runs on any local network |
+| 🧪 **Dual Simulator** | Python CLI + browser-based HTML — full pipeline testing without hardware |
+| 📱 **Mobile App** | Android APK (`web_app.apk`) for on-the-go monitoring |
+| 🔄 **Bidirectional Bridge** | `bridge.py` syncs MQTT → Firebase (sensor) and Firebase → MQTT (control) |
 
 ---
 
-## 🏗️ Architecture
-<img width="861" height="659" alt="image" src="https://github.com/user-attachments/assets/9d14adc2-f379-465e-b83c-56a620146936" />
+## ⚙️ System Architecture
+Layered Architecture DiagraSystem Specification Diagram
+<img width="1004" height="468" alt="image" src="https://github.com/user-attachments/assets/3fa9188b-9b1d-4187-8919-ce325cf9135c" />
+
+Block Diagram
+<img width="861" height="659" alt="image" src="https://github.com/user-attachments/assets/92a1c3f3-ca9a-4d81-9c45-b416bf614441" />
+
+---
+
+## 📡 MQTT Topic Architecture
+
+| Topic | Direction | Description |
+|---|---|---|
+| `greenhouse/sensor` | Subscribe | Incoming JSON sensor payload from simulator |
+| `greenhouse/control/fan` | Publish | Fan ON/OFF command → device / simulator |
+| `greenhouse/control/pump` | Publish | Water pump ON/OFF command |
+| `greenhouse/control/light` | Publish | Grow light ON/OFF command |
+| `greenhouse/control/#` | Subscribe | Wildcard — simulator listens for all commands |
+
+**Sensor payload format:**
+```json
+{
+  "temperature": 28.3,
+  "humidity": 72.1,
+  "soil": 65,
+  "light": 3200
+}
+```
 
 ---
 
 ## 📊 Monitored Parameters
 
-| Parameter | Sensor | Range | Accuracy |
-|---|---|---|---|
-| 🌡️ Temperature | DHT11 | 0 – 50 °C | ±2 °C |
-| 💧 Air Humidity | DHT11 | 20 – 90 %RH | ±5 %RH |
-| 🌱 Soil Moisture | Capacitive | 0 – 100% | ±5% |
-| ☀️ Light Intensity | BH1750 | 1 – 65,535 lux | ±7 lux |
+| Parameter | Sensor | Simulated Range | Device Range | Accuracy |
+|---|---|---|---|---|
+| 🌡️ Temperature | DHT11 | 25 – 35 °C | 0 – 50 °C | ±2 °C |
+| 💧 Air Humidity | DHT11 | 50 – 90 %RH | 20 – 90 %RH | ±5 %RH |
+| 🌱 Soil Moisture | Capacitive | 60 – 80 % | 0 – 100 % | ±5 % |
+| ☀️ Light Intensity | BH1750 | 2,000 – 5,000 lux | 1 – 65,535 lux | ±7 lux |
 
 ---
 
-## 🧪 Sensor Simulator
+## 🧪 Simulation Strategy
 
-A key design choice in this project is the **`simulator.htm`** — a standalone HTML file that acts as a virtual ESP32 device running entirely in the browser.
+A core design decision was to fully decouple software development from physical hardware. Two complementary simulators cover different use cases:
 
-**What it does:**
-- Generates realistic sensor data following configurable environmental scenarios
-- Publishes data to the MQTT broker via **WebSocket** (MQTT over WS)
-- Simulates day/night light cycles, watering events, and temperature fluctuations
-- Allows developers to test the full data pipeline without any physical hardware
+### 1. `mqtt_simutlation.py` — Python CLI Simulator
 
-<img width="1004" height="468" alt="image" src="https://github.com/user-attachments/assets/f4fb27b3-58e4-42b6-8d27-578d8a0c51e0" />
-This approach enabled full system validation before hardware procurement, significantly accelerating development.
+- Generates randomized sensor readings and publishes to `greenhouse/sensor` **every 3 seconds**
+- Simultaneously subscribes to `greenhouse/control/#` to receive and log actuator commands
+- Ideal for automated testing, scripted scenarios, and headless environments
+
+```bash
+python mqtt_simutlation.py
+# Sent sensor data: {"temperature": 28.3, "humidity": 72.1, "soil": 65, "light": 3200}
+# [COMMAND RECEIVED] Topic: greenhouse/control/fan | Command: ON
+#  -> FAN switching to: ON
+```
+
+### 2. `simulator.htm` — Browser-based Simulator
+
+- Standalone HTML file — open directly in any modern browser, **no install required**
+- Connects to Mosquitto via **MQTT over WebSocket** (port 9001)
+- Provides a visual UI to configure and trigger sensor data publication
+- Enables full pipeline testing without any terminal or Python environment
+
+> Both simulators produce identical data formats — the rest of the system cannot distinguish them from a real ESP32 device.
+
+---
+
+## 📁 Repository Structure
+
+```
+iot-greenhouse/
+├── web_iot_greenhouse/       # Web monitoring dashboard (HTML / CSS / JS)
+├── bridge.py                 # Python: bidirectional MQTT ↔ Firebase bridge
+├── mqtt_simutlation.py       # Python: CLI sensor data simulator
+├── simulator.htm             # HTML: browser-based MQTT simulator
+├── serviceAccountKey.json    # Firebase service account credentials (⚠️ keep private)
+├── web_app (3).apk           # Android APK — mobile dashboard
+└── README.md
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Role |
+|---|---|---|
+| **Communication** | MQTT · Mosquitto Broker | Lightweight pub/sub messaging protocol |
+| **Communication** | MQTT over WebSocket | Browser-native MQTT for `simulator.htm` |
+| **Simulator (CLI)** | Python · paho-mqtt | `mqtt_simutlation.py` — random data every 3s |
+| **Simulator (Web)** | HTML5 · JavaScript | `simulator.htm` — browser MQTT publisher |
+| **Bridge** | Python · paho-mqtt · firebase-admin | `bridge.py` — bidirectional MQTT ↔ Firebase |
+| **Dashboard** | HTML · CSS · JavaScript | `web_iot_greenhouse/` — real-time monitoring UI |
+| **Mobile** | Android APK | `web_app.apk` — mobile access |
+| **Cloud** | Firebase Realtime Database | Time-series sensor data persistence |
 
 ---
 
@@ -73,23 +149,28 @@ This approach enabled full system validation before hardware procurement, signif
 
 ### Prerequisites
 
-- [Mosquitto MQTT Broker](https://mosquitto.org/download/) (with WebSocket enabled)
-- [Node.js](https://nodejs.org/) v16+
-- [Firebase](https://firebase.google.com/) project with Realtime Database
-- A modern browser (Chrome / Firefox / Edge)
+- Python 3.8+ (`paho-mqtt`, `firebase-admin`)
+- [Mosquitto MQTT Broker](https://mosquitto.org/download/) with WebSocket enabled
+- Firebase project with Realtime Database + `serviceAccountKey.json`
+- Modern browser (Chrome / Firefox / Edge)
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/iot-greenhouse.git
+git clone https://github.com/nguyenthaozzz/iot-greenhouse.git
 cd iot-greenhouse
 ```
 
-### 2. Configure Mosquitto with WebSocket support
+### 2. Install Python dependencies
 
-Edit your `mosquitto.conf`:
+```bash
+pip install paho-mqtt firebase-admin
+```
+
+### 3. Configure Mosquitto with WebSocket support
 
 ```conf
+# mosquitto.conf
 listener 1883
 protocol mqtt
 
@@ -97,112 +178,75 @@ listener 9001
 protocol websockets
 ```
 
-Start the broker:
-
 ```bash
 mosquitto -c mosquitto.conf
 ```
 
-### 3. Configure Firebase
+### 4. Place Firebase credentials
 
-Copy and fill in your credentials:
+Put your `serviceAccountKey.json` in the project root. The database URL is already set in `bridge.py`:
 
-```bash
-cp config/firebase.example.js config/firebase.js
-# Edit firebase.js with your Firebase project config
+```python
+'databaseURL': 'https://iot-green-house-ebeaf-default-rtdb.firebaseio.com'
 ```
 
-### 4. Start the backend bridge
+### 5. Start the bridge
 
 ```bash
-cd backend
-npm install
-npm start
+python bridge.py
+# Listening for Firebase changes...
 ```
 
-### 5. Launch the dashboard
+The bridge will:
+- **Receive** sensor data from MQTT → write to Firebase
+- **Listen** for control changes in Firebase → forward to MQTT actuator topics
 
-Open `dashboard/index.html` in your browser, or serve it locally:
+### 6. Run a simulator
+
+**Option A — Python CLI:**
+```bash
+python mqtt_simutlation.py
+```
+
+**Option B — Browser simulator:**
+
+Open `simulator.htm` directly in your browser → set broker IP → click **Start**.
+
+### 7. Open the dashboard
 
 ```bash
-npx serve dashboard
+cd web_iot_greenhouse
+python -m http.server 8080
+# Open http://localhost:8080
 ```
 
-### 6. Run the simulator
+### 8. Mobile (optional)
 
-Open `simulator/simulator.htm` directly in your browser. Configure the broker IP and click **Start Simulation**.
-
----
-
-## 📁 Project Structure
-iot-greenhouse/
-├── 📂 backend/              # Node.js MQTT-to-Firebase bridge
-│   ├── index.js
-│   └── package.json
-├── 📂 dashboard/            # Web monitoring interface
-│   ├── index.html
-│   ├── app.js
-│   └── style.css
-├── 📂 simulator/            # Browser-based sensor simulator
-│   └── simulator.htm
-├── 📂 config/               # Firebase & MQTT configuration
-│   └── firebase.example.js
-├── 📂 docs/                 # Architecture diagrams & documentation
-└── README.md
-
----
-
-## 🛠️ Tech Stack
-
-**Communication**
-- MQTT (Mosquitto Broker) — lightweight pub/sub messaging
-- MQTT over WebSocket — browser-native MQTT connectivity
-
-**Frontend**
-- Vanilla JavaScript (ES6+) — dashboard & simulator
-- Chart.js — real-time time-series visualization
-- HTML5 / CSS3
-
-**Backend & Cloud**
-- Node.js — MQTT bridge service
-- Firebase Realtime Database — cloud data persistence
-
-**Simulated Hardware**
-- ESP32 (simulated) — Wi-Fi enabled microcontroller
-- DHT11 — temperature & humidity sensor
-- BH1750 — light intensity sensor
-- Capacitive soil moisture sensor
-
----
-
-## 📸 Screenshots
-
-> *Dashboard and simulator screenshots coming soon*
+Install `web_app (3).apk` on your Android device for mobile access to the dashboard.
 
 ---
 
 ## 📖 What I Learned
 
-This project gave me hands-on experience with:
-
-- Designing a **layered IoT architecture** (perception → network → application)
-- Implementing **MQTT pub/sub** patterns for real-time data streaming
-- Building a **browser-to-broker communication** pipeline using WebSocket
-- Working with **Firebase Realtime Database** for time-series data storage
-- Developing a **hardware simulator** to decouple software from physical devices
-- Thinking about **system reliability**, thresholds, and automated decision logic
+- Designing a **layered IoT architecture** — perception, network, and application layers
+- Implementing **MQTT pub/sub** for low-latency, real-time data streaming
+- Building a **bidirectional Python bridge** between MQTT and Firebase using event stream listeners
+- Developing **two complementary simulators** (CLI + browser) to decouple development from hardware
+- Working with **Firebase Realtime Database** for live data sync and time-series storage
+- Packaging a web app as an **Android APK** for cross-platform mobile access
+- Thinking through **threshold logic** and automated actuator decision rules
 
 ---
 
-## 🤝 Contributing
+## ⚠️ Security Note
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to change.
+`serviceAccountKey.json` contains sensitive Firebase credentials. It is included here for demonstration purposes only. In production, this file should be added to `.gitignore` and managed via environment variables or a secrets manager.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ---
 
