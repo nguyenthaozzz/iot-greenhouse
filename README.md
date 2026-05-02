@@ -39,8 +39,175 @@ Rather than relying on physical hardware during development, the system includes
 ---
 
 ## 🏗️ Architecture
+<img width="861" height="659" alt="image" src="https://github.com/user-attachments/assets/9d14adc2-f379-465e-b83c-56a620146936" />
 
+---
 
+## 📊 Monitored Parameters
 
+| Parameter | Sensor | Range | Accuracy |
+|---|---|---|---|
+| 🌡️ Temperature | DHT11 | 0 – 50 °C | ±2 °C |
+| 💧 Air Humidity | DHT11 | 20 – 90 %RH | ±5 %RH |
+| 🌱 Soil Moisture | Capacitive | 0 – 100% | ±5% |
+| ☀️ Light Intensity | BH1750 | 1 – 65,535 lux | ±7 lux |
 
-Về phần mô phỏng dữ liệu, nhóm mong muốn có thể mô phỏng sát nhất với hoạt động thực tế của phần cứng về việc gửi dữ liệu lên Firebase thông qua MQTT broker. Tuy nhiên vì hiện tại file serviveAccountkey.jon đã cũ, khiến cho file giả lập mqtt_simulation.py không thể hoạt động đúng được nữa. Nhóm đã thử up lại key mới lên tuy nhiên vì chính sách bảo mật của Github mà file key mới không thể được push lên. Tuy vậy nhóm vẫn còn một file giả lập khác là simulator.htm nên nếu bạn muốn giả lập số liệu, có thế chạy file simulator.htm trên. Xin cảm ơn!!! 
+---
+
+## 🧪 Sensor Simulator
+
+A key design choice in this project is the **`simulator.htm`** — a standalone HTML file that acts as a virtual ESP32 device running entirely in the browser.
+
+**What it does:**
+- Generates realistic sensor data following configurable environmental scenarios
+- Publishes data to the MQTT broker via **WebSocket** (MQTT over WS)
+- Simulates day/night light cycles, watering events, and temperature fluctuations
+- Allows developers to test the full data pipeline without any physical hardware
+
+<img width="1004" height="468" alt="image" src="https://github.com/user-attachments/assets/f4fb27b3-58e4-42b6-8d27-578d8a0c51e0" />
+This approach enabled full system validation before hardware procurement, significantly accelerating development.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Mosquitto MQTT Broker](https://mosquitto.org/download/) (with WebSocket enabled)
+- [Node.js](https://nodejs.org/) v16+
+- [Firebase](https://firebase.google.com/) project with Realtime Database
+- A modern browser (Chrome / Firefox / Edge)
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/iot-greenhouse.git
+cd iot-greenhouse
+```
+
+### 2. Configure Mosquitto with WebSocket support
+
+Edit your `mosquitto.conf`:
+
+```conf
+listener 1883
+protocol mqtt
+
+listener 9001
+protocol websockets
+```
+
+Start the broker:
+
+```bash
+mosquitto -c mosquitto.conf
+```
+
+### 3. Configure Firebase
+
+Copy and fill in your credentials:
+
+```bash
+cp config/firebase.example.js config/firebase.js
+# Edit firebase.js with your Firebase project config
+```
+
+### 4. Start the backend bridge
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+### 5. Launch the dashboard
+
+Open `dashboard/index.html` in your browser, or serve it locally:
+
+```bash
+npx serve dashboard
+```
+
+### 6. Run the simulator
+
+Open `simulator/simulator.htm` directly in your browser. Configure the broker IP and click **Start Simulation**.
+
+---
+
+## 📁 Project Structure
+iot-greenhouse/
+├── 📂 backend/              # Node.js MQTT-to-Firebase bridge
+│   ├── index.js
+│   └── package.json
+├── 📂 dashboard/            # Web monitoring interface
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
+├── 📂 simulator/            # Browser-based sensor simulator
+│   └── simulator.htm
+├── 📂 config/               # Firebase & MQTT configuration
+│   └── firebase.example.js
+├── 📂 docs/                 # Architecture diagrams & documentation
+└── README.md
+
+---
+
+## 🛠️ Tech Stack
+
+**Communication**
+- MQTT (Mosquitto Broker) — lightweight pub/sub messaging
+- MQTT over WebSocket — browser-native MQTT connectivity
+
+**Frontend**
+- Vanilla JavaScript (ES6+) — dashboard & simulator
+- Chart.js — real-time time-series visualization
+- HTML5 / CSS3
+
+**Backend & Cloud**
+- Node.js — MQTT bridge service
+- Firebase Realtime Database — cloud data persistence
+
+**Simulated Hardware**
+- ESP32 (simulated) — Wi-Fi enabled microcontroller
+- DHT11 — temperature & humidity sensor
+- BH1750 — light intensity sensor
+- Capacitive soil moisture sensor
+
+---
+
+## 📸 Screenshots
+
+> *Dashboard and simulator screenshots coming soon*
+
+---
+
+## 📖 What I Learned
+
+This project gave me hands-on experience with:
+
+- Designing a **layered IoT architecture** (perception → network → application)
+- Implementing **MQTT pub/sub** patterns for real-time data streaming
+- Building a **browser-to-broker communication** pipeline using WebSocket
+- Working with **Firebase Realtime Database** for time-series data storage
+- Developing a **hardware simulator** to decouple software from physical devices
+- Thinking about **system reliability**, thresholds, and automated decision logic
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to change.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+Made with ☕ and 🌱 — *Building smarter agriculture, one sensor at a time.*
+
+</div>
