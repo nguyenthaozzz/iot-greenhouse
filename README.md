@@ -26,6 +26,8 @@ Rather than relying on physical hardware, the system ships with **two interchang
 - **`simulator.htm`** — browser-based MQTT publisher, no terminal needed
 
 A Python **`bridge.py`** then syncs data **bidirectionally** between MQTT and Firebase Realtime Database, while the web dashboard and Android APK provide live monitoring and remote control.
+<img width="1004" height="565" alt="image" src="https://github.com/user-attachments/assets/38ba6d66-9f70-4949-8999-86010b6f59f4" />
+<img width="1004" height="565" alt="image" src="https://github.com/user-attachments/assets/cd05f429-e746-4e88-844c-683cd60b8534" />
 
 ---
 
